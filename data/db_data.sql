@@ -28,6 +28,7 @@ CREATE TABLE `networks` (
   `rpcurl` varchar(100) NOT NULL,
   `chainid` int(11) NOT NULL,
   `registrycontract` varchar(255) NOT NULL,
+  `ftsocanaddr` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,7 +39,7 @@ CREATE TABLE `networks` (
 
 LOCK TABLES `networks` WRITE;
 /*!40000 ALTER TABLE `networks` DISABLE KEYS */;
-INSERT INTO `networks` VALUES (1,'FLR','https://sbi.flr.ftsocan.com/ext/C/rpc',14,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019'),(2,'SGB','https://sbi.sgb.ftsocan.com/ext/C/rpc',19,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019'),(3,'CFLR','https://coston-api.flare.network/ext/bc/C/rpc',16,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019'),(4,'C2FLR','https://sbi1.costwo.ftsocan.com/ext/C/rpc',114,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019');
+INSERT INTO `networks` VALUES (1,'FLR','https://sbi.flr.ftsocan.com/ext/C/rpc',14,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019','0x9e55a49D251324B1623dc2A81894D1AfBfB8bbdC'),(2,'SGB','https://sbi.sgb.ftsocan.com/ext/C/rpc',19,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019','0x7C255e428e95bEbc76e944D49D4F460C84b3A3c3'),(3,'CFLR','https://coston-api.flare.network/ext/bc/C/rpc',16,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019',''),(4,'C2FLR','https://sbi1.costwo.ftsocan.com/ext/C/rpc',114,'0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019','');
 /*!40000 ALTER TABLE `networks` ENABLE KEYS */;
 UNLOCK TABLES;
 

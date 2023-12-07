@@ -52,6 +52,7 @@ class NetworksRepository extends EntityRepository
         $array['rpcurl'] = $networks->getRpcUrl();
         $array['chainid'] = $networks->getChainId();
         $array['registrycontract'] = $networks->getRegistryContract();
+        $array['ftsocanaddr'] = $networks->getFtsoCanAddr();
 
         return $array;
     }
@@ -68,6 +69,7 @@ class NetworksRepository extends EntityRepository
         $this->networks->setRpcUrl($networkArray['rpcurl']);
         $this->networks->setChainId($networkArray['chainid']);
         $this->networks->setRegistryContract($networkArray['registrycontract']);
+        $this->networks->setFtsoCanAddr($networkArray['ftsocanaddr']);
 
         return $this->networks;
     }

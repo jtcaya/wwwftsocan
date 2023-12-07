@@ -39,6 +39,11 @@ class Networks
     protected $registrycontract;
 
     /**
+     * @ORM\Column(type="string", length=255, name="ftsocanaddr")
+     */
+    protected $ftsocanaddr;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -116,5 +121,21 @@ class Networks
     public function setRegistryContract($registrycontract)
     {
         $this->registrycontract = (string) $registrycontract;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFtsoCanAddr()
+    {
+        return $this->ftsocanaddr;
+    }
+
+    /**
+     * @param mixed $ftsocanaddr
+     */
+    public function setFtsoCanAddr($ftsocanaddr)
+    {
+        $this->ftsocanaddr = (string) $ftsocanaddr;
     }
 }

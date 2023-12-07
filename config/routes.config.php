@@ -41,6 +41,11 @@ $baseConfig['routes'] = [
         '/sgbexplorer[/{action}]',
         'sgbexplorer',
     ],
+    [
+        'GET',
+        '/landing[/{action}]',
+        'landing',
+    ],
     /*[
         ['GET', 'POST'],
         '/products[/{action}[/{id:[0-9]+}]]',

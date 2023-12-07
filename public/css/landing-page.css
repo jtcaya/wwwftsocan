@@ -1,0 +1,226 @@
+html {
+    --distance: 5rem;
+}
+
+.site-content {
+    overflow-x: hidden;
+    background-image: url('../img/banner.png');
+    background-size: 100%;
+    background-repeat: repeat;
+    font-family: 'Poppins', sans-serif;
+    line-height: 24px;
+}
+
+#about {
+    background: none !important;
+    margin-top: 107px !important;
+    color: #fff;
+    box-shadow: none !important;
+}
+
+#navigation {
+    -webkit-transition: all 0.8s ease 0s;
+    -moz-transition: all 0.8s ease 0s;
+    -ms-transition: all 0.8s ease 0s;
+    -o-transition: all 0.8s ease 0s;
+    transition: all 0.8s ease 0s;
+
+    background-color: rgba(0, 0, 0, .4);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+}
+
+#navigation.animated-header {
+    padding: 10px 0;
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    #navigation {
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+}
+
+.jumbotron {
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.jumbo-img {
+    position:absolute;
+    left: 25%;
+    right: 0;
+    top: 14%;
+    width: 669.3px;
+    height: 590px;
+}
+
+.megatext {
+    line-height: 0.35;
+    z-index:100;
+    position: relative;
+    font-size: 170px !important;
+    color: #fff !important;    
+    margin-top: 12%;
+    width: 100%;
+    mix-blend-mode: exclusion;
+}
+
+.tinytext {
+    z-index:100;
+    position: relative;
+    font-size: 40px !important;
+    color: #fff !important;    
+    width: 100%;
+    mix-blend-mode: exclusion;
+}
+
+.current-metrics {
+    font-size: 75px;
+}
+
+.cards {
+    margin-top: 63px;
+    display: flex;
+    width: 100%;
+}
+
+.card {
+    min-height: 460px;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.10);
+    opacity: 1;
+    border-radius: 30px;
+    border-top: 2px solid rgba(255, 255, 255, 0.60);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.60);
+    border-left: none;
+    border-right: none;
+    padding: 27px 160px 27px 32px;
+    box-shadow: 0px 4px 20px 2px rgba(0, 0, 0, 0.50);
+    width: 397px;
+    height: fit-content;
+    transition: 0.2s;
+}
+
+.card:nth-child(1)::after {
+    z-index: 0;
+    top: 1em;
+    left: 0;
+    content: '';
+    background: url(../img/flare-black.svg) 76.7% no-repeat;
+    opacity: 0.10;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.card:nth-child(2)::after {
+    z-index: 0;
+    top: -2em;
+    left: -2em;
+    content: '';
+    background: url(../img/sgb-logo.svg) 26.344px 63.141px / 82.528% 76.7% no-repeat;
+    opacity: 0.10;
+    position: absolute;
+    width: 115%;
+    height: 115%;
+}
+
+
+.card:nth-child(3)::after {
+    z-index: 0;
+    top: -2em;
+    left: -1em;
+    content: '';
+    background: url(../img/Logo-Corporate-Dark.svg) 26.344px 63.141px / 82.528% 76.7% no-repeat;
+    opacity: 0.10;
+    position: absolute;
+    width: 115%;
+    height: 115%;
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    .card {
+        -webkit-backdrop-filter: blur(5px);
+        backdrop-filter: blur(5px);
+    }
+}
+
+.info {
+    z-index: 1;
+    position: relative;
+    padding: 27px 0px 0px;
+    margin-top: 30px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.card a {
+    font-size: 80px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fd000f;
+}
+.card p {
+    margin-top: 5px;
+    font-size: 24px;
+    color: #000 !important;
+}
+
+.card:not(:first-child) {
+margin-left: calc(var(--distance)*-1);
+}
+
+.card:hover,
+.card:focus-within {
+transform: translatey(-1rem);
+}
+
+.card:hover ~ .card,
+.card:focus-within ~ .card {
+transform: translatex(var(--distance));
+}
+
+.see-our-dapp {
+    font-size: 75px;
+    color: #fff;
+}
+
+#see-dapp {
+    margin-top: 107px;
+    background: url("../img/Component-1.png") no-repeat;
+    background-size: cover;
+    color: #fff;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    padding: 50px 0;
+}
+
+.glitch-text {
+    float: none !important;
+    font-size: 75px;
+    color: #fff;
+    font-size:50px;
+    display:block;
+    text-align:center;
+    line-height:100px;
+    height: auto;
+    width: fit-content;
+    margin: auto;
+    margin-top: 20px;
+    text-transform:uppercase;
+    letter-spacing:10px
+}
+
+#twitter {
+    margin-top: 107px;
+    margin-bottom: 50px;
+    color: #fff;
+}
+
+.follow-us {
+    font-size: 75px;
+}
+
+.follow-us, .follow {
+    color: #000;
+}

@@ -28,6 +28,7 @@ CREATE TABLE `networks` (
   `rpcurl` varchar(100) NOT NULL,
   `chainid` int(11) NOT NULL,
   `registrycontract` varchar(255) NOT NULL,
+  `ftsocanaddr` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
