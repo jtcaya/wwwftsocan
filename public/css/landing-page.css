@@ -1,5 +1,9 @@
 html {
-    --distance: 5rem;
+    --distance: 2em;
+}
+
+.twitter-tweet {
+    margin: auto;
 }
 
 .site-content {
@@ -11,9 +15,13 @@ html {
     line-height: 24px;
 }
 
+#home-jumbotron {
+    height: 650px;
+}
+
 #about {
     background: none !important;
-    margin-top: 107px !important;
+    margin-top: 20px !important;
     color: #fff;
     box-shadow: none !important;
 }
@@ -56,21 +64,30 @@ html {
 }
 
 .megatext {
+    border: none;
     line-height: 0.35;
     z-index:100;
     position: relative;
     font-size: 170px !important;
     color: #fff !important;    
-    margin-top: 12%;
+    margin-top: 11.5%;
     width: 100%;
     mix-blend-mode: exclusion;
 }
 
+.megatext span {
+    display: inline-block;
+}
+
 .tinytext {
+    border: none;
+    line-height: 0.35;
     z-index:100;
     position: relative;
     font-size: 40px !important;
-    color: #fff !important;    
+    color: #fff !important;
+    margin-top: 70px;
+    margin-bottom: 20px;
     width: 100%;
     mix-blend-mode: exclusion;
 }
@@ -86,6 +103,7 @@ html {
 }
 
 .card {
+    margin: auto;
     min-height: 460px;
     z-index: 1;
     background: rgba(255, 255, 255, 0.10);
@@ -102,7 +120,7 @@ html {
     transition: 0.2s;
 }
 
-.card:nth-child(1)::after {
+#card-1::after {
     z-index: 0;
     top: 1em;
     left: 0;
@@ -114,7 +132,7 @@ html {
     height: 100%;
 }
 
-.card:nth-child(2)::after {
+#card-2::after {
     z-index: 0;
     top: -2em;
     left: -2em;
@@ -127,7 +145,7 @@ html {
 }
 
 
-.card:nth-child(3)::after {
+#card-3::after {
     z-index: 0;
     top: -2em;
     left: -1em;
@@ -167,8 +185,22 @@ html {
     color: #000 !important;
 }
 
-.card:not(:first-child) {
-margin-left: calc(var(--distance)*-1);
+#card-1 {
+    margin-right: calc(var(--distance)*-1);
+    margin-left: 0;
+    margin-top: 0;
+}
+
+#card-2 {
+    margin-left: calc(var(--distance)*-1);
+    margin-right: 0;
+    margin-top: 0;
+}
+
+#card-3 {
+    margin-left: calc(var(--distance)*-2);
+    margin-right: 0;
+    margin-top: 0;
 }
 
 .card:hover,
@@ -187,6 +219,7 @@ transform: translatex(var(--distance));
 }
 
 #see-dapp {
+    line-height:100px;
     margin-top: 107px;
     background: url("../img/Component-1.png") no-repeat;
     background-size: cover;
@@ -197,18 +230,21 @@ transform: translatex(var(--distance));
 
 .glitch-text {
     float: none !important;
-    font-size: 75px;
     color: #fff;
     font-size:50px;
     display:block;
     text-align:center;
-    line-height:100px;
     height: auto;
     width: fit-content;
     margin: auto;
     margin-top: 20px;
     text-transform:uppercase;
     letter-spacing:10px
+}
+
+.dapp-image {
+    width: 30%;
+    height: 30%;
 }
 
 #twitter {
@@ -218,9 +254,268 @@ transform: translatex(var(--distance));
 }
 
 .follow-us {
+    display: block;
     font-size: 75px;
+    margin: auto;
 }
 
 .follow-us, .follow {
     color: #000;
+}
+
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+
+    #home-jumbotron {
+        height: 420px;
+    }
+
+    .jumbo-img {
+        width: 100%;
+        height: auto;
+        top: 12%;
+        left: 0;
+    }
+
+    .jumbotron span {
+        font-size: inherit;
+    }
+
+    .megatext {
+        -webkit-text-stroke: 1.5px #fff;
+        line-height: 0.85;
+        z-index:100;
+        position: relative;
+        color: transparent !important;
+        font-size: 82px !important;
+        margin-top: 20%;
+        width: 100%;
+        mix-blend-mode: exclusion;
+    }
+
+    .tinytext {
+        -webkit-text-stroke: 0.5px #fff;
+        line-height: 1.2;
+        z-index:100;
+        position: relative;
+        font-size: 22px !important;
+        color: #fff !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 90%;
+        mix-blend-mode: exclusion;
+    }
+
+    .current-metrics {
+        font-size: 40px;
+    }
+
+    .cards {
+        margin-top: 63px;
+        display: flex;
+        width: 100%;
+    }
+
+    .card {
+        min-height: 460px;
+        width: 71%;
+    }
+
+    #card-1 {
+        margin-top: calc(var(--distance)*1);
+        margin-right: auto;
+        margin-left: 0;
+    }
+
+    #card-2 {
+        margin-top: calc(var(--distance)*1);
+        margin-right: auto;
+        margin-left: 0;
+    }
+
+    #card-3 {
+        margin-top: calc(var(--distance)*1);
+        margin-right: auto;
+        margin-left: 0;
+    }
+
+    .see-our-dapp {
+        line-height: 60px;
+        font-size: 35px;
+        color: #fff;
+    }
+
+    .dapp-image {
+        width: 50%;
+        height: 50%;
+    }
+
+
+    .follow-us {
+        font-size: 60px;
+        margin-bottom: 15px;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+    .jumbo-img {
+        width: 75%;
+        height: auto;
+        left: 11%;
+        top: 25%;
+    }
+
+    .jumbotron span {
+        font-size: inherit;
+    }
+
+    .megatext {
+        line-height: 0.85;
+        font-size: 100px !important;
+        margin-top: 13%;
+    }
+
+    .tinytext {
+        -webkit-text-stroke: 0.5px #fff;
+        line-height: 1.2;
+        z-index:100;
+        position: relative;
+        font-size: 30px !important;
+        color: #fff !important;
+        margin-top: 5px;
+        margin-bottom: 50px;
+        width: 90%;
+        mix-blend-mode: exclusion;
+    }
+
+    .current-metrics {
+        font-size: 55px;
+    }
+
+    .cards {
+        margin-top: 63px;
+        display: flex;
+        width: 100%;
+    }
+
+    .card {
+        min-height: 460px;
+        width: 71%;
+    }
+
+    #card-1 {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #card-2 {
+        margin-top: calc(var(--distance)*1);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    #card-3 {
+        margin-top: calc(var(--distance)*1);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .see-our-dapp {
+        line-height: 60px;
+        font-size: 35px;
+        color: #fff;
+    }
+
+    .dapp-image {
+        width: 50%;
+        height: 50%;
+    }
+
+
+    .follow-us {
+        font-size: 60px;
+        margin-bottom: 15px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+
+    .jumbo-img {
+        width: 75%;
+        height: auto;
+        left: 11%;
+        top: 8%;
+    }
+
+    .jumbotron span {
+        font-size: inherit;
+    }
+
+    .megatext {
+        line-height: 0.85;
+        font-size: 100px !important;
+        margin-top: 13%;
+    }
+
+    .tinytext {
+        -webkit-text-stroke: 0.5px #fff;
+        line-height: 1.2;
+        z-index:100;
+        position: relative;
+        font-size: 30px !important;
+        color: #fff !important;
+        margin-top: 5px;
+        margin-bottom: 50px;
+        width: 90%;
+        mix-blend-mode: exclusion;
+    }
+
+    .current-metrics {
+        font-size: 55px;
+    }
+
+    .cards {
+        margin-top: 63px;
+        display: flex;
+        width: 100%;
+    }
+
+    .card {
+        min-height: 460px;
+        width: 71%;
+    }
+
+    #card-1 {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #card-2 {
+        margin-top: calc(var(--distance)*1);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    #card-3 {
+        margin-top: calc(var(--distance)*1);
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .see-our-dapp {
+        line-height: 60px;
+        font-size: 35px;
+        color: #fff;
+    }
+
+    .dapp-image {
+        width: 50%;
+        height: 50%;
+    }
+
+
+    .follow-us {
+        font-size: 60px;
+        margin-bottom: 15px;
+    }
 }

@@ -18,13 +18,25 @@
     Jumbotron
     ==================================== -->
 
-    <section id="home-jumbotron" class="fit" style="height: 650px;">
+    <section id="home-jumbotron" class="fit">
         <div class="jumbotron jumbotron-fluid jumbotron-padding bg-img">
             <div id="container-1" class="container text-center" style="margin: 0 !important; width: 100%;">
-                <img class ="jumbo-img" src="/img/Logo-Corporate-Dark.png"/>
-                <div class="h1 megatext">
-                    <span>FTSO Canada<br /></span>
-                    <span class="lead tinytext">Start building passive income today!</span>
+                <div class="grid">
+                    <div class="row">
+                        <img class ="jumbo-img" src="/img/Logo-Corporate-Dark.png"/>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="h1 megatext">
+                                    <span>FTSO Canada<br /></span>
+                                    <div class="row">
+                                        <div class="col-md-12 align-content-center">
+                                            <span class="lead tinytext">Start building passive income today!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,61 +52,86 @@
 
     <section id="about">
         <div id="container-2" class="container text-center">
-            <div class="h1 current-metrics"><strong>See our current metrics!</strong></div>
-            <?php if (isset($view['results']['nodata'])): ?>
-                <?=$view['results']['nodata'] ?>
-            <?php else: ?>
-                <?php foreach($view['results'] as $key => $networks): ?>
-                    <div class="SelectedNetwork" data-value="<?=$networks['id'] ?>" data-chainidhex="<?='0x' . dechex($networks['chainid']) ?>"data-rpcurl="<?=$networks['rpcurl'] ?>" data-registrycontract="<?=$networks['registrycontract'] ?>" data-ftsocanaddr="<?=$networks['ftsocanaddr'] ?>"></div>
-                <?php endforeach; ?>
-                <div class="cards">
-                    <div class="card" id="card-1">
-                        <div class="info">
-                            <a href="#" id="flr-rank"><a href="#" >%</a></a>
-                            <p class="text-left">Vote Power</p>
-                        </div>
-                        <div class="info">
-                            <a href="#" id="flr-availability"><a href="#" ></a></a>
-                            <p class="text-left">Reward Rate</p>
-                        </div>
-                        <div class="info">
-                            <a href="#" id="flr-fee">20<a href="#" >%</a></a>
-                            <p class="text-left">Fee</p>
-                        </div>
-                    </div>
-                    <div class="card" id="card-2">
-                        <div class="info">
-                            <a href="#" id="sgb-rank"><a href="#" >%</a></a>
-                            <p class="text-left">Vote Power</p>
-                        </div>
-                        <div class="info">
-                            <a href="#" id="sgb-availability"><a href="#" ></a></a>
-                            <p class="text-left">Reward Rate</p>
-                        </div>
-                        <div class="info">
-                            <a href="#" id="sgb-fee">20<a href="#" >%</a></a>
-                            <p class="text-left">Fee</p>
-                        </div>
-                    </div>
-                    <div class="card" id="card-3">
-<!--                        <div class="info">-->
-<!--                            <a href="#" id="val-delegators">20</a>-->
-<!--                            <p class="text-left">Delegators</p>-->
-<!--                        </div>-->
-<!--                        <div class="info">-->
-<!--                            <a href="#" id="val-availability">100<a href="#" >%</a></a>-->
-<!--                            <p class="text-left">Availability</p>-->
-<!--                        </div>-->
-<!--                        <div class="info">-->
-<!--                            <a href="#" id="val-fee">20<a href="#" >%</a></a>-->
-<!--                            <p class="text-left">Fee</p>-->
-<!--                        </div>-->
-                        <div class="info">
-                            <a class="text-center" style="line-height: 1">Coming Soon!</a>
-                        </div>
+            <div class="grid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="h1 current-metrics"><strong>See our current metrics!</strong></div>
                     </div>
                 </div>
-            <?php endif ?>
+                <div class="row">
+                    <?php if (isset($view['results']['nodata'])): ?>
+                        <?=$view['results']['nodata'] ?>
+                    <?php else: ?>
+                        <?php foreach($view['results'] as $key => $networks): ?>
+                            <div class="SelectedNetwork" data-value="<?=$networks['id'] ?>" data-chainidhex="<?='0x' . dechex($networks['chainid']) ?>"data-rpcurl="<?=$networks['rpcurl'] ?>" data-registrycontract="<?=$networks['registrycontract'] ?>" data-ftsocanaddr="<?=$networks['ftsocanaddr'] ?>"></div>
+                        <?php endforeach; ?>
+                    <div class="col-md-12">
+                        <div class="cards">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card" id="card-1">
+                                        <div class="row">
+                                            <div class="info">
+                                                <a href="#" id="flr-rank"><a href="#" >%</a></a>
+                                                <p class="text-left">Vote Power</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="info">
+                                                <a href="#" id="flr-availability"><a href="#" ></a></a>
+                                                <p class="text-left">Reward Rate</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="info">
+                                                <a href="#" id="flr-fee">20<a href="#" >%</a></a>
+                                                <p class="text-left">Fee</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card" id="card-2">
+                                        <div class="info">
+                                            <a href="#" id="sgb-rank"><a href="#" >%</a></a>
+                                            <p class="text-left">Vote Power</p>
+                                        </div>
+                                        <div class="info">
+                                            <a href="#" id="sgb-availability"><a href="#" ></a></a>
+                                            <p class="text-left">Reward Rate</p>
+                                        </div>
+                                        <div class="info">
+                                            <a href="#" id="sgb-fee">20<a href="#" >%</a></a>
+                                            <p class="text-left">Fee</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card" id="card-3">
+                                        <!--                                        <div class="info">-->
+                                        <!--                                            <a href="#" id="val-delegators">20</a>-->
+                                        <!--                                            <p class="text-left">Delegators</p>-->
+                                        <!--                                        </div>-->
+                                        <!--                                        <div class="info">-->
+                                        <!--                                            <a href="#" id="val-availability">100<a href="#" >%</a></a>-->
+                                        <!--                                            <p class="text-left">Availability</p>-->
+                                        <!--                                        </div>-->
+                                        <!--                                        <div class="info">-->
+                                        <!--                                            <a href="#" id="val-fee">20<a href="#" >%</a></a>-->
+                                        <!--                                            <p class="text-left">Fee</p>-->
+                                        <!--                                        </div>-->
+                                        <div class="info">
+                                            <a class="text-center" style="line-height: 1; font-size: 65px">Coming Soon!</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif ?>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -111,19 +148,19 @@
             <div class="grid">
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="h1 glitch-text">FTSO Can DApp</span>
+                        <span class="h1 glitch-text see-our-dapp">FTSO Can DApp</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <a href="#" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>dappwrap')">
-                            <img src="./img/Logo-Corporate-Light.png" alt="DApp-link" style="width: 30%; height: 30%;">
+                            <img class="dapp-image" src="./img/Logo-Corporate-Light.png" alt="DApp-link">
                         </a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <a href="#" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>dappwrap')" class="h1 glitch-text">Click here!</a>
+                        <a href="#" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>dappwrap')" class="h1 glitch-text see-our-dapp">Click here!</a>
                     </div>
                 </div>
             </div>
