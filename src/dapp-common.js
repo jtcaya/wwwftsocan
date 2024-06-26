@@ -539,27 +539,20 @@ async function getDelegatedProviders(account, web32, rpcUrl, flrAddr, DappObject
     let insert1 = '';
     let insert2 = '';
 
-    let selectedNetwork = document.getElementById('SelectedNetwork');
-
-    let chainIdHex = selectedNetwork?.options[selectedNetwork.selectedIndex].getAttribute('data-chainidhex');
-
     // Origin: https://raw.githubusercontent.com/TowoLabs/ftso-signal-providers/next/bifrost-wallet.providerlist.json
     fetch(dappUrlBaseAddr + 'bifrost-wallet.providerlist.json')
         .then(res => res.json())
         .then(FtsoInfo => {
                 FtsoInfo.providers.sort((a, b) => a.name > b.name ? 1 : -1);
 
-                console.log(FtsoInfo);
-
                 var indexNumber;
 
                 for (var f = 0; f < FtsoInfo.providers.length; f++) {
-                    if ((FtsoInfo.providers[f].chainId === parseInt(chainIdHex, 16)) && (FtsoInfo.providers[f].listed === true)) {
-                        for (var i = 0; i < delegatedFtsos.length; i++) {
-                            if (FtsoInfo.providers[f].address === delegatedFtsos[i]) {
-                                indexNumber = f;
+                    indexNumber = f;
 
-                                //<img src="https://raw.githubusercontent.com/TowoLabs/ftso-signal-providers/master/assets/${delegatedFtsos[i]}.png" class="delegatedIcon" id="delegatedIcon"/>
+                    for (var i = 0; i < delegatedFtsos.length; i++) {
+                        if (FtsoInfo.providers[f].address === delegatedFtsos[i]) {
+                            if (ftsoJsonList.includes(delegatedFtsos[i])) {
                                 if (FtsoInfo.providers[indexNumber].name === "FTSOCAN") {
                                     // Origin: https://raw.githubusercontent.com/TowoLabs/ftso-signal-providers/master/assets.
                                     insert1 = `<div class="wrap-box-ftso" data-addr="${delegatedFtsos[i]}">
@@ -604,8 +597,7 @@ async function getDelegatedProviders(account, web32, rpcUrl, flrAddr, DappObject
                                                 </div>`;
                                 }
                             } else {
-                                $.alert('The FTSO you are delegated to is invalid!');
-                                break;
+                                $.alert('The FTSO you have delegated to is invalid!');
                             }
                         }
                     }
