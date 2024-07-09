@@ -74,7 +74,7 @@ async function showSpinner(doSomething) {
     });
 }
 
-async function showConfirmationSpinner(txHash, web32, isv2) {
+async function showConfirmationSpinner(txHash, web32) {
     var spinner =
     $.confirm({
         escapeKey: false,
@@ -92,7 +92,7 @@ async function showConfirmationSpinner(txHash, web32, isv2) {
             },
         },
         onContentReady: async function () {
-            await checkTx(txHash, web32, this, isv2);
+            await checkTx(txHash, web32, this);
         }
     });
 }
@@ -317,7 +317,7 @@ function updateCall() {
     }, 20000);
 }
 
-function checkTx(hash, web32, spinner, isv2) {
+function checkTx(hash, web32, spinner, isv2 = false) {
     return new Promise((resolve) => {
         var i = 0;
         
@@ -328,22 +328,27 @@ function checkTx(hash, web32, spinner, isv2) {
             web32.eth.getTransactionReceipt(hash).then((receipt) => {
                 // If we've got a receipt, check status and log / change text accordingly
                 if (receipt) {
-                    if (spinner) {
+                    if (typeof spinner !== "undefined") {
                         spinner.close();
                     }
                     
                     if (Number(receipt.status) === 1) {
-                        if (!isv2) {
+
+                        if (isv2 === false) {
                             showConfirm(receipt.transactionHash);
                         }
+
                         resolve("Success");
+
                         document.getElementById("ConnectWallet").click();
+
                     } else if (Number(receipt.status) === 0) {
-                        if (spinner) {
+
+                        if (typeof spinner !== "undefined") {
                             spinner.close();
                         }
 
-                        if (!isv2) {
+                        if (isv2 === false) {
                             showFail();
                         }
                         resolve("Fail");
@@ -356,11 +361,11 @@ function checkTx(hash, web32, spinner, isv2) {
             });
             
             if (i === 20) {
-                if (spinner) {
+                if (typeof spinner !== "undefined") {
                     spinner.close();
                 }
 
-                if (!isv2) {
+                if (isv2 === false) {
                     showFail();
                 }
 
@@ -888,6 +893,8 @@ async function ConnectWalletClickClaim(rpcUrl, flrAddr, DappObject) {
         let DistributionDelegatorsContract = new web32.eth.Contract(DappObject.distributionAbiLocal, DistributionDelegatorsAddr);
         let ftsoRewardContract = new web32.eth.Contract(DappObject.ftsoRewardAbiLocal, ftsoRewardAddr);
         let rewardManagerContract;
+        console.log("rewardManagerAddr: ");
+        console.log(rewardManagerAddr);
         if (rewardManagerAddr) {
             rewardManagerContract = new web32.eth.Contract(DappObject.rewardManagerAbiLocal, rewardManagerAddr);
         }
@@ -949,11 +956,18 @@ async function ConnectWalletClickClaim(rpcUrl, flrAddr, DappObject) {
         if (rewardManagerContract) {
             unclaimedAmountv2 = await rewardManagerContract.methods.getStateOfRewards(account).call();
 
-            if (BigInt(unclaimedAmountv2) > BigInt(0)) {
-                DappObject.hasV2Rewards = true;
-            }
+            console.log("unclaimedAmountv2: ");
+            console.log(unclaimedAmountv2);
+            console.log("unclaimedAmount: ");
+            console.log(unclaimedAmount);
 
-            unclaimedAmount += BigInt(unclaimedAmountv2);
+            if (unclaimedAmountv2.length > 0) {
+                DappObject.hasV2Rewards = true;
+
+                for (var i = 0; i < unclaimedAmountv2.length; i++) {
+                    unclaimedAmount += BigInt(unclaimedAmountv2[i][0].amount);
+                }
+            }
         }
         
         const convertedRewards = String(Number.parseFloat(web32.utils.fromWei(unclaimedAmount, "ether")).toFixed(2));
@@ -1508,14 +1522,14 @@ window.dappInit = async (option) => {
                                 let ftsoRewardContract = new web32.eth.Contract(DappObject.ftsoRewardAbiLocal, ftsoRewardAddr);
                                 const rewardManagerAddr = await GetContract("RewardManager", object.rpcUrl, object.flrAddr);
                                 let rewardManagerContract;
-                                let currentV2Epoch;
+                                let unclaimedEpochsv2;
+
                                 if (rewardManagerAddr) {
                                     rewardManagerContract = new web32.eth.Contract(DappObject.rewardManagerAbiLocal, rewardManagerAddr);
 
-                                    currentV2Epoch = await rewardManagerContract.methods.getCurrentRewardEpochId().call();
-
-                                    console.log(currentV2Epoch);
+                                    unclaimedEpochsv2 = await rewardManagerContract.methods.getStateOfRewards(account).call();
                                 }
+
                                 const epochsUnclaimed = await ftsoRewardContract.methods.getEpochsWithUnclaimedRewards(account).call();
                                 let txPayload = {};
                                 let txPayloadV2 = {};
@@ -1524,32 +1538,40 @@ window.dappInit = async (option) => {
 
                                 if ((Number(document.getElementById('ClaimButtonText').innerText) > 0) && (Number(document.getElementById('ClaimButtonText').innerText) < bucketTotal)) {
                                     if (checkBox.checked) {
-                                        txPayload = {
-                                            from: account,
-                                            to: ftsoRewardAddr,
-                                            data: ftsoRewardContract.methods.claim(account, account, String(epochsUnclaimed[epochsUnclaimed.length - 1]), true).encodeABI(),
-                                        };
-
-                                        if (rewardManagerContract) {
-                                            txPayloadV2 = {
+                                        if (DappObject.hasV1Rewards === true) {
+                                            txPayload = {
                                                 from: account,
-                                                to: rewardManagerAddr,
-                                                data: rewardManagerContract.methods.claim(account, account, currentV2Epoch, true, []).encodeABI(),
+                                                to: ftsoRewardAddr,
+                                                data: ftsoRewardContract.methods.claim(account, account, String(epochsUnclaimed[epochsUnclaimed.length - 1]), true).encodeABI(),
                                             };
                                         }
-                                    } else {
-                                        txPayload = {
-                                            from: account,
-                                            to: ftsoRewardAddr,
-                                            data: ftsoRewardContract.methods.claim(account, account, String(epochsUnclaimed[epochsUnclaimed.length - 1]), false).encodeABI(),
-                                        };
 
-                                        if (rewardManagerContract) {
-                                            txPayloadV2 = {
+                                        if (DappObject.hasV2Rewards === true) {
+                                            if (rewardManagerContract) {
+                                                txPayloadV2 = {
+                                                    from: account,
+                                                    to: rewardManagerAddr,
+                                                    data: rewardManagerContract.methods.claim(account, account, String(unclaimedEpochsv2.at(-1)[0].rewardEpochId), true, []).encodeABI(),
+                                                };
+                                            }
+                                        }
+                                    } else {
+                                        if (DappObject.hasV1Rewards === true) {
+                                            txPayload = {
                                                 from: account,
-                                                to: rewardManagerAddr,
-                                                data: rewardManagerContract.methods.claim(account, account, currentV2Epoch, false, []).encodeABI(),
+                                                to: ftsoRewardAddr,
+                                                data: ftsoRewardContract.methods.claim(account, account, String(epochsUnclaimed[epochsUnclaimed.length - 1]), false).encodeABI(),
                                             };
+                                        }
+
+                                        if (DappObject.hasV2Rewards === true) {
+                                            if (rewardManagerContract) {
+                                                txPayloadV2 = {
+                                                    from: account,
+                                                    to: rewardManagerAddr,
+                                                    data: rewardManagerContract.methods.claim(account, account, String(unclaimedEpochsv2.at(-1)[0].rewardEpochId), false, []).encodeABI(),
+                                                };
+                                            }
                                         }
                                     }
 
@@ -1570,13 +1592,14 @@ window.dappInit = async (option) => {
                                                 })
                                                 .then(txHash => {
                                                     txHashes[0] = txHash;
-                                                    checkTx(txHash, web32, null, true).then(result => {
+                                                    checkTx(txHash, web32, undefined, true).then(result => {
                                                         return new Promise((resolve, reject) => {
                                                             switch (result) {
                                                                 case "Success":
                                                                     v2Spinner.$content.find('#v1TxStatus').html('Confirmed');
                                                                     v2Spinner.$content.find('#v1TxIcon').removeClass();
                                                                     v2Spinner.$content.find('#v1TxIcon').addClass("fa fa-solid fa-check");
+                                                                    v2Spinner.$content.find('#v2TxStatus').html('Please check your Wallet...');
                                                                     setTimeout(() => {
                                                                         resolve("Success");
                                                                     }, 1500);
@@ -1593,6 +1616,7 @@ window.dappInit = async (option) => {
                                                                     v2Spinner.$content.find('#v1TxStatus').html('Unknown');
                                                                     v2Spinner.$content.find('#v1TxIcon').removeClass();
                                                                     v2Spinner.$content.find('#v1TxIcon').addClass("fa fa-warning");
+                                                                    v2Spinner.$content.find('#v2TxStatus').html('Please check your Wallet...');
                                                                     setTimeout(() => {
                                                                         resolve("Unknown");
                                                                     }, 1500);
@@ -1606,12 +1630,13 @@ window.dappInit = async (option) => {
                                                                 params: [transactionParametersV2],
                                                             }).then(txHashV2 => {
                                                                 txHashes[1] = txHashV2;
-                                                                checkTx(txHash, web32, null, true).then(receipt => {
+                                                                checkTx(txHashV2, web32, undefined, true).then(receipt => {
                                                                     switch (receipt) {
                                                                         case "Success":
                                                                             v2Spinner.$content.find('#v2TxStatus').html('Confirmed');
                                                                             v2Spinner.$content.find('#v2TxIcon').removeClass();
                                                                             v2Spinner.$content.find('#v2TxIcon').addClass("fa fa-solid fa-check");
+                                                                            v2Spinner.close();
                                                                             showConfirm(txHashes[0] + "<br/>" + txHashes[1]);
                                                                             break
                                                                         case "Fail":
@@ -1659,6 +1684,10 @@ window.dappInit = async (option) => {
                                             .catch((error) => showFail());
                                         });
                                     }
+
+                                    DappObject.hasV1Rewards = false;
+
+                                    DappObject.hasV2Rewards = false;
 
                                     const tokenBalance = await tokenContract.methods.balanceOf(account).call();
                                     
