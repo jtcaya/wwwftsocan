@@ -951,6 +951,8 @@ async function ConnectWalletClickClaim(rpcUrl, flrAddr, DappObject) {
 
         if (unclaimedAmount > BigInt(0)) {
             DappObject.hasV1Rewards = true;
+        } else {
+            DappObject.hasV1Rewards = false;
         }
 
         if (rewardManagerContract) {
@@ -967,6 +969,8 @@ async function ConnectWalletClickClaim(rpcUrl, flrAddr, DappObject) {
                 for (var i = 0; i < unclaimedAmountv2.length; i++) {
                     unclaimedAmount += BigInt(unclaimedAmountv2[i][0].amount);
                 }
+            } else {
+                DappObject.hasV2Rewards = false;
             }
         }
         
