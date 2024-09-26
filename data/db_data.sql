@@ -16,6 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `tools`
+--
+
+DROP TABLE IF EXISTS `tools`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tools` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usedchains` varchar(100) NOT NULL,
+  `appname` varchar(100) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `isdev` BIT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tools`
+--
+
+LOCK TABLES `tools` WRITE;
+/*!40000 ALTER TABLE `tools` DISABLE KEYS */;
+INSERT INTO `tools` VALUES (1,'SGB FLR','FTSO Fee Claimer','A Tool that helps Data Providers claim their Rewards.',1);
+/*!40000 ALTER TABLE `tools` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `networks`
 --
 

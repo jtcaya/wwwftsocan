@@ -11,4 +11,5 @@ $baseConfig['async_process_bin'] = $baseConfig['BASEDIR']
 $baseConfig['async_commands'] = [
     \Application\Commands\ReadNetworksCommand::class,
     \Application\Commands\ReadSmartContractsCommand::class,
+    \Application\Commands\ReadToolsCommand::class,
 ];

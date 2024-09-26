@@ -18,6 +18,11 @@ $baseConfig['routes'] = [
     ],
     [
         'GET',
+        '/tools[/{action}]',
+        'tools',
+    ],
+    [
+        'GET',
         '/faq[/{action}]',
         'faq',
     ],

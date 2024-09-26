@@ -12,18 +12,38 @@ $baseConfig['routes'] = [
         'index',
     ],
     [
-        ['GET', 'POST'],
-        '/products[/{action}[/{id:[0-9]+}]]',
-        'products',
+        'GET',
+        '/dapp[/{action}]',
+        'dapp',
     ],
     [
         'GET',
-        '/baz[/{action}]',
-        'specialmodule/index',
+        '/tools[/{action}]',
+        'tools',
     ],
     [
         'GET',
-        '/admin[/{action}]',
-        'specialmodule/index',
+        '/faq[/{action}]',
+        'faq',
+    ],
+    [
+        'GET',
+        '/delegate[/{action}]',
+        'delegate',
+    ],
+    [
+        'GET',
+        '/stake[/{action}]',
+        'stake',
+    ],
+    [
+        'GET',
+        '/flrexplorer[/{action}]',
+        'flrexplorer',
+    ],
+    [
+        'GET',
+        '/sgbexplorer[/{action}]',
+        'sgbexplorer',
     ],
 ];

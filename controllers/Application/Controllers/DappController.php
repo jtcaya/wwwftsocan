@@ -21,83 +21,6 @@ class DappController extends AggregateRootController implements AggregateEventLi
         DappController::READ_REQUESTED => NetworksReadModel::class,
     ];
 
-    // This controller MUST implement the Ascmvc\AscmvcControllerFactoryInterface interface
-    // if you wish to enable this factory method.
-    /*public static function factory(array &$baseConfig, EventDispatcher &$eventDispatcher, Container &$serviceManager, &$viewObject)
-    {
-        // It is possible to override the default identifiers for this Aggregate Root
-        // (event notified aggregates).
-        $eventDispatcher->setIdentifiers(
-            [
-                NetworksController::class,
-                EventLogger::class,
-                SomeClass::class,
-            ]
-        );
-
-        // Manually attach invokable listeners if needed
-        $someReadModel = SomeReadModel::getInstance($eventDispatcher);
-
-        $eventDispatcher->attach(
-            NetworksController::READ_REQUESTED,
-            $someReadModel
-        );
-
-        $somePolicy = NetworksPolicy::getInstance($eventDispatcher);
-
-        // If there are many listeners to attach, one may use a
-        // Listener Aggregate that implements the \Laminas\EventManager\ListenerAggregateInterface
-        // instead of attaching them one by one.
-        $eventDispatcher->attach(
-            NetworksController::CREATE_REQUESTED,
-            $somePolicy
-        );
-
-        $eventDispatcher->attach(
-            NetworksController::UPDATE_REQUESTED,
-            $somePolicy
-        );
-
-        $eventDispatcher->attach(
-            NetworksController::DELETE_REQUESTED,
-            $somePolicy
-        );
-
-        // Instantiate an instance of this controller
-        $controller = new NetworksController($baseConfig, $eventDispatcher);
-
-        // If needed, it is possible another listener method to the shared event manager's
-        // corresponding identifier (see above).
-        $sharedEventManager = $eventDispatcher->getSharedManager();
-
-        $sharedEventManager->attach(
-            NetworksController::class,
-            '*',
-            [$controller, 'someListenerMethod']
-        );
-
-        // Return the controller to the Controller Manager.
-        return $controller;
-    }*/
-
-    /*public function onDispatch(AscmvcEvent $event)
-    {
-        $array = [
-            'firstname' => 'Andrew',
-            'lastname' => 'Caya',
-            'age' => 42,
-        ];
-
-        $response = new Response();
-        $response->getBody()->write(json_encode($array));
-        $response = $response
-            ->withStatus(200)
-            ->withHeader('Content-Type', 'application/json')
-            ->withAddedHeader('X-Custom-Header', 'it works');
-
-        return $response;
-    }*/
-
     public function onDispatch(AscmvcEvent $event)
     {
         $app = $event->getApplication();
@@ -111,14 +34,6 @@ class DappController extends AggregateRootController implements AggregateEventLi
         $this->view['dappActive'] = $baseConfig['dappActive'];
 
         $this->view['css'][] = $baseConfig['URLBASEADDR'] . 'css/dapp-main.css';
-
-        // if (is_null($this->view['path'][2]) || empty($this->view['path'][2]) || $this->view['path'][2] === 'index' || $this->view['path'][2] === 'wrap') {
-        //     $this->view['css'][] = $baseConfig['URLBASEADDR'] . 'css/dapp-wrap.css';
-        // } elseif ($this->view['path'][2] === 'delegate'){
-        //     $this->view['css'][] = $baseConfig['URLBASEADDR'] . 'css/dapp-delegate.css';
-        // } elseif ($this->view['path'][2] === 'claim') {
-        //     $this->view['css'][] = $baseConfig['URLBASEADDR'] . 'css/dapp-claim.css';
-        // }
 
         $this->view['css'][] = $baseConfig['URLBASEADDR'] . 'css/dapp-wrap.css';
         $this->view['css'][] = $baseConfig['URLBASEADDR'] . 'css/dapp-delegate.css';

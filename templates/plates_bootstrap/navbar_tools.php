@@ -10,7 +10,7 @@
 Fixed Navigation
 ==================================== -->
 <header id="navigation" class="navbar-inverse navbar-fixed-top animated-header">
-<div class="container">
+    <div class="container" style="margin-bottom: 0.5em;">
         <div class="navbar-header">
             <!-- responsive nav button -->
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -37,7 +37,7 @@ Fixed Navigation
                 <li><a href="#" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>index')">Home</a></li>
                 <li id="delegate-dropdown">
                     <a href="#" class="delegate-dropdown">Delegation Tools <i class="fas fa-caret-down"></i></a>
-                    <div class="dd-menu">
+                    <div class="dd-menu" style="top: 37px; left: 15px;">
                         <div class="dropdown-menu-dapp" style="left: 0px;">
                             <ul>
                                 <li><a href="#" class="navbar-list-item" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>dapp/index')">DApp<sup><strong> NEW!</strong></sup></a></li>
@@ -54,6 +54,19 @@ Fixed Navigation
         </nav>
         <!-- /main nav -->
     </div>
+    <!-- secondary nav -->
+    <nav class="navbar-dapp-actions navbar-expand">
+        <div class="container">
+            <div class="collapse navbar-collapse static-top navbar-right" role="navigation" style="border: none; box-shadow: none; -webkit-box-shadow: none;">
+                <ul class="nav navbar-nav navbar-nav-dapp nav-item">
+                    <li><a href="#" class="nav-link" onclick="">Most Recent</a></li>
+                    <li><a href="#" class="nav-link" onclick="">For Users</a></li>
+                    <li><a href="#" class="nav-link" onclick="">For Developers</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- /secondary nav -->
 </header>
 <!--
 End Fixed Navigation
