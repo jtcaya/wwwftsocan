@@ -99,4 +99,102 @@ class ToolsController extends AggregateRootController implements AggregateEventL
 
         return $this->view;
     }
+
+    public function preUserAction($vars = null)
+    {
+        if (isset($vars['get']['id'])) {
+            $toolArray['id'] = (string)$vars['get']['id'];
+        } else {
+            $toolArray = [];
+        }
+
+        if (!isset($this->view['page']) ) {
+            $this->view['page'] = 1;      
+        }
+        
+        $aggregateValueObject = new AggregateImmutableValueObject($toolArray);
+
+        $event = new AggregateEvent(
+            $aggregateValueObject,
+            $this->aggregateRootName,
+            ToolsController::READ_REQUESTED
+        );
+
+        $this->eventDispatcher->dispatch($event);
+    }
+
+    public function userAction($vars = null)
+    {
+        if (isset($this->results) && !empty($this->results)) {
+            $this->filteredResults = [];
+
+
+            array_walk($this->results, function($value, $key) {
+                if ($value['isdev'] === false) {
+                    $this->filteredResults[$key] = $value;
+                }
+            });
+
+            $this->view['results'] = $this->filteredResults;
+        } else {
+            $this->view['results']['nodata'] = 'No results';
+        }
+
+        $this->view['headjs'] = 1;
+
+        $this->view['bodyjs'] = 1;
+
+        $this->view['templatefile'] = 'tools_index';
+
+        return $this->view;
+    }
+
+    public function preDevAction($vars = null)
+    {
+        if (isset($vars['get']['id'])) {
+            $toolArray['id'] = (string)$vars['get']['id'];
+        } else {
+            $toolArray = [];
+        }
+
+        if (!isset($this->view['page']) ) {
+            $this->view['page'] = 1;      
+        }
+        
+        $aggregateValueObject = new AggregateImmutableValueObject($toolArray);
+
+        $event = new AggregateEvent(
+            $aggregateValueObject,
+            $this->aggregateRootName,
+            ToolsController::READ_REQUESTED
+        );
+
+        $this->eventDispatcher->dispatch($event);
+    }
+
+    public function devAction($vars = null)
+    {
+        if (isset($this->results) && !empty($this->results)) {
+            $this->filteredResults = [];
+
+
+            array_walk($this->results, function($value, $key) {
+                if ($value['isdev'] === true) {
+                    $this->filteredResults[$key] = $value;
+                }
+            });
+
+            $this->view['results'] = $this->filteredResults;
+        } else {
+            $this->view['results']['nodata'] = 'No results';
+        }
+
+        $this->view['headjs'] = 1;
+
+        $this->view['bodyjs'] = 1;
+
+        $this->view['templatefile'] = 'tools_index';
+
+        return $this->view;
+    }
 }

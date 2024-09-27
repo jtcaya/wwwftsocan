@@ -1,3 +1,53 @@
+@font-face {
+    font-family: FontAwesome;
+    src: url(../fonts/fontawesome-webfont.woff);
+}
+
+body {
+    overflow-x: hidden;
+    padding-top: 5.7em;
+    font-family: 'Poppins', sans-serif;
+    background-image: url("../img/Component-1.png") !important;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-size: 100%;
+    background-repeat: repeat-y;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+h2 {
+    overflow: hidden;
+    align-self: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+    background: #e8d6d6;
+    margin: 0 25%;
+    padding: 25px 44px;
+    border-radius: 25px;
+    width: calc(50% + 1em);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+h2 strong {
+    color: #000;
+    z-index: 100;
+}
+
+h2::after {
+    position: absolute;
+    display: inline-block;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.5), transparent);
+    transform: skewX(45deg) translateX(12px);
+    transition: 0.5s;
+}
+
 /* change the background color */
 .navbar-dapp-actions {
     background-color: rgba(253, 0, 15, 0.8);

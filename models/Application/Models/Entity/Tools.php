@@ -34,7 +34,7 @@ class Tools
     protected $description;
 
     /**
-     * @ORM\Column(type="integer", length=1, name="isdev")
+     * @ORM\Column(type="boolean", length=1, name="isdev")
      */
     protected $isdev;
 

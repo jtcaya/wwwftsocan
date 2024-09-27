@@ -27,7 +27,7 @@ CREATE TABLE `tools` (
   `usedchains` varchar(100) NOT NULL,
   `appname` varchar(100) NOT NULL,
   `description` varchar(255) NOT NULL,
-  `isdev` BIT,
+  `isdev` BOOLEAN,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

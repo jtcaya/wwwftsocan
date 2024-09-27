@@ -59,9 +59,9 @@ Fixed Navigation
         <div class="container">
             <div class="collapse navbar-collapse static-top navbar-right" role="navigation" style="border: none; box-shadow: none; -webkit-box-shadow: none;">
                 <ul class="nav navbar-nav navbar-nav-dapp nav-item">
-                    <li><a href="#" class="nav-link" onclick="">Most Recent</a></li>
-                    <li><a href="#" class="nav-link" onclick="">For Users</a></li>
-                    <li><a href="#" class="nav-link" onclick="">For Developers</a></li>
+                    <li><a href="#" class="nav-link" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>tools/index')">Most Recent</a></li>
+                    <li><a href="#" class="nav-link" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>tools/user')">For Users</a></li>
+                    <li><a href="#" class="nav-link" onclick="getDocsPageNewTab(1, '<?=$view['urlbaseaddr']?>tools/dev')">For Developers</a></li>
                 </ul>
             </div>
         </div>

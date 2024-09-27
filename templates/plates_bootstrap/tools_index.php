@@ -14,6 +14,18 @@
 
 <main id="MainSection" class="mx-auto h-full max-w-7xl pt-24 md:pt-12 px-4 md:px-8" role="main" data-urlbaseaddr="<?=$view['urlbaseaddr'] ?>">
     <?=$this->section('navbar_tools', $this->fetch('navbar_tools', ['view' => $view]))?>
+    <section id="FAQ" class="main-section-padding">
+        <div class="container">
+            <h2 class="sec-title text-center"><strong>Tools</strong></h2>
+
+            <?php if (isset($view['results'])): ?>
+                <?php foreach ( $view['results'] as $key => $value ) {
+                    $view['count'] = $key;
+                    echo $this->section($view['results'][$key]['appname'], $this->fetch('tool_card', ['view' => $view]));
+                } ?>
+            <?php endif ?>
+        </div>    
+    </section>
     <div class="dapp-container" id="dapp-root"></div>
 </main>
 

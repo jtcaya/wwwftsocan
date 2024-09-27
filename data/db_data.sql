@@ -27,7 +27,7 @@ CREATE TABLE `tools` (
   `usedchains` varchar(100) NOT NULL,
   `appname` varchar(100) NOT NULL,
   `description` varchar(255) NOT NULL,
-  `isdev` BIT,
+  `isdev` BOOLEAN,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,7 +38,7 @@ CREATE TABLE `tools` (
 
 LOCK TABLES `tools` WRITE;
 /*!40000 ALTER TABLE `tools` DISABLE KEYS */;
-INSERT INTO `tools` VALUES (1,'SGB FLR','FTSO Fee Claimer','A Tool that helps Data Providers claim their Rewards.',1);
+INSERT INTO `tools` VALUES (1,'SGB FLR','FTSO Fee Claimer','A Tool that helps Data Providers claim their Rewards.',1),(2,'XRP','XRP Metamask Snap','A Tool that helps Metamask users seamlessly interact with the XRPL ecosystem.',0);
 /*!40000 ALTER TABLE `tools` ENABLE KEYS */;
 UNLOCK TABLES;
 
