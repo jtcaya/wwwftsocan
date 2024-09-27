@@ -18,12 +18,14 @@
         <div class="container">
             <h2 class="sec-title text-center"><strong>Tools</strong></h2>
 
-            <?php if (isset($view['results'])): ?>
-                <?php foreach ( $view['results'] as $key => $value ) {
-                    $view['count'] = $key;
-                    echo $this->section($view['results'][$key]['appname'], $this->fetch('tool_card', ['view' => $view]));
-                } ?>
-            <?php endif ?>
+            <div class="row gx-5">
+                <?php if (isset($view['results'])): ?>
+                    <?php foreach ( $view['results'] as $key => $value ) {
+                        $view['count'] = $key;
+                        echo $this->section($view['results'][$key]['appname'], $this->fetch('tool_card', ['view' => $view]));
+                    } ?>
+                <?php endif ?>
+            </div>
         </div>    
     </section>
     <div class="dapp-container" id="dapp-root"></div>
