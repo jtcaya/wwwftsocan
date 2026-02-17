@@ -1106,7 +1106,239 @@ h1, h2 {
     }
 }
 
-@media only screen and (min-width: 480px) and (max-width: 767px) {
+@media only screen and (min-height: 0px) and (max-height: 440px) {
+    .connect-wallet.select-wallet-nav {
+        display: inline-block;
+    }
+
+    .navbar-dapp-actions {
+        display: none;
+    }
+
+    .jconfirm-box-container {
+        max-width: 420px !important;
+        padding: 0 !important;
+    }
+
+    .jconfirm.jconfirm-material .jconfirm-box {
+        padding: 32px 22px 21px 22px;
+    }
+
+    .jconfirm .jconfirm-box .jconfirm-buttons button {
+        font-size: 18px;
+        padding: 6px 16px;
+    }
+
+    body {
+        background-repeat: no-repeat;
+        background-position-x: left 50%;
+        background-position-y: bottom 100%;
+    }
+
+    .dd-menu {
+        top: 0 !important;
+        left: 0 !important;
+    }
+
+    .nav-link-dapp {
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+    }
+
+    .navbar-nav-dapp {
+        margin: 0px -15px;
+    }
+
+    .wrap-box {
+        margin: 10px;
+    }
+
+    .wrap-box-ftso {
+        height: fit-content;
+        margin: 10px;
+    }
+
+    .container {
+        padding: 0px 10px !important;
+        height: fit-content;
+    }
+
+    .bottom-nav {
+        display: inline;
+    }
+
+    .account-btn.clicked .top-row {
+        opacity: 1;
+    }
+
+    .top-row {
+        opacity: 0;
+        padding: 30px 15px 0;
+    }
+
+    .address-row {
+        height: auto;
+        padding-left: 25%;
+    }
+
+    .account-btn.clicked .view-explorer {
+        opacity: 1 !important;
+    }
+
+    .account-btn.clicked .view-explorer.disabled {
+        opacity: 0.7 !important;
+    }
+
+    .account-btn .view-explorer {
+        margin-top: 12px;
+        margin-left: 260px;
+        font-size: 15px;
+        min-width: 0;
+        padding: 10px;
+        height: 45px;
+        opacity: 0 !important;
+    }
+
+    .account-btn .balances {
+        margin: 10px auto 60px auto;
+    }
+
+    .account-btn .cta {
+        font-size: 20px;
+        opacity: 0;
+    }
+
+    .account-btn.clicked .ctaP {
+        font-size: 12px;
+        top: 25px;
+    }
+
+    .dapp-container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        margin-top: 6.5em !important;
+        max-width: 100%;
+        width: 100%;
+        max-height: 700px;
+        border-radius: 25px 25px 0 0;
+    }
+
+    .scroller {
+        width: 100%;
+        padding: 20px 15px 15px;
+        min-height: 165px;
+        max-height: 165px;
+    }
+
+    #centerButton.clicked {
+        margin-bottom: 233px;
+    }
+
+    #centerButton {
+        width: fit-content;
+        margin-left: 45%;
+    }
+
+    .account-btn {
+        left: 0;
+        width: 100%;
+        bottom: 0;
+        border-radius: 0;
+        position: absolute;
+        overflow: visible;
+    }
+
+    .account-btn .balances li {
+        padding-bottom: 10px;
+    }
+
+    .network-icon {
+        left: 10% !important;
+    }
+
+    .clicked {
+        border-radius: 50px 50px 0 0;
+    }
+
+    #navigation.animated-header {
+        padding: 10px 0 !important;
+    }
+
+    .addr-wrap .selectize-input {
+        bottom: -20px;
+    }
+
+    /*.dapp-buttons {*/
+    /*    margin: 15px;*/
+    /*    box-sizing: border-box;*/
+    /*    display: grid;*/
+    /*    width: auto;*/
+    /*    place-items: center;*/
+    /*    text-align: center;*/
+    /*}*/
+
+    .amount {
+        width: 50%;
+    }
+
+    .connect-wallet {
+        float: none !important;
+        height: 60px;
+        max-height: 80px;
+        width: auto;
+        min-width: 178px;
+        max-width: 179px;
+        margin: auto;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        padding: 15px 20px;
+    }
+
+    .dummytext {
+        margin: 0;
+    }
+
+    .dapp-box {
+        height: 46px;
+        padding: 0;
+    }
+
+    .selected-network {
+        padding: 10px 30px 10px 30px;
+        width: auto;
+    }
+
+    .select-container {
+        height: fit-content;
+    }
+
+    .current-wallet {
+        display: none;
+        font-size: 13px;
+        left: 72%;
+    }
+
+    .current-wallet.ring {
+        animation-name: col-mobile;
+    }
+
+    .current-wallet.paused {
+        transform: scale(1.4) translate(0, -0.8em);
+    }
+
+    .current-wallet.cta {
+        isolation: isolate;
+        display: inline-block;
+        z-index: 1033 !important;
+    }
+
+    .current-wallet-popup {
+        width: 140px;
+        left: -50%;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) and (min-height: 441px) {
 
     body {
         background-repeat: no-repeat;
