@@ -1,4 +1,4 @@
-import { wait, checkTx, checkTxStake } from "./dapp-utils.js";
+import { wait, checkTx, checkTxStake, round } from "./dapp-utils.js";
 import { ledgerAppList } from "./dapp-globals.js";
 import { ConnectWalletClick } from "./dapp-wallet.js";
 import { undelegate } from "./dapp-delegate.js";
@@ -6,6 +6,7 @@ import { claimRewards } from "./dapp-claim.js";
 import { RefreshStakingPage } from "./dapp-staking.js";
 import { LedgerEVMSingleSign } from "./dapp-ledger.js";
 import { ethers } from "./ethers.js";
+import { getTimeRemaining } from "./flare-utils.js";
 
 export async function showSignatureSpinner() {
     DappObject.isPopupActive = true;
@@ -479,12 +480,72 @@ export async function showAlreadyDelegated(DelegatedFtsos, object) {
     });
 }
 
-export async function showStakesModal() {
+export async function showStakesModal(validatorList, currentStakes, web32) {
     DappObject.isPopupActive = true;
 
+    let insert1 = `<table>
+                        <thead>
+                            <tr style="color: #e74c3c;">
+                                <th colspan="1" style="padding-left: 20px;">${dappStrings['dapp_provider']}</th>
+                                <th colspan="1" style="text-align: center;"><i class="fa fa-solid fa-lock"></i></th>
+                                <th colspan="1" style="text-align: center;"><i class="fa fa-solid fa-clock"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+    let i = 0;
+
+    for (i = 0; i < currentStakes.length; i++) {
+        for (let j = 0; j < validatorList.length; j++) {
+            if (currentStakes[i].nodeId.toLowerCase() === validatorList[j].nodeId.toLowerCase()) {
+                let remainingTime = getTimeRemaining(Number(currentStakes[i].startTime * 1000n), Number(currentStakes[i].endTime * 1000n));
+
+                let html = `<tr style="border-top:1px solid #8f8f8f;border-bottom:1px solid #8f8f8f;padding: 5px 0;line-height:normal;">
+                                <td style="padding: 5px 0;">
+                                    <div style="display:flex;">
+                                        <img style="width:30px;height:30px;margin:auto;" src="${dappUrlBaseAddr}assets/${currentStakes[i].nodeId}.png" alt="${validatorList[j].name}"/>
+                                        <div class="validator-table-row">
+                                            <div class="ftso-identifier" style="margin:0;line-height: 32px;">
+                                                <span id="delegatedName">${validatorList[j].name}</span>
+                                            </div>
+                                            <div class="wrapper-claim" style="margin:0;">
+                                                <span class="address-claim" style="font-size: 10px;width: fit-content;margin:auto;">${currentStakes[i].nodeId.slice(0, 12) + "..." + currentStakes[i].nodeId.slice(-4)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display:flex;flex-direction: column;height:100%;padding: 0">
+                                        <div style="width:fit-content;max-width:80px;margin:auto;font-size:2rem;" class="wrapper">
+                                            <span style="width:fit-content;" id="stakedAmount${i}" class="token-balance-claim odometer">0</span>
+                                        </div>
+                                        <div class="wrapper-claim" style="margin:auto;">
+                                            <span class="address-claim" style="font-size: 10px;width: fit-content;margin:auto;">Locked Funds</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display:flex;flex-direction: column;height:100%;padding: 0 8px">
+                                        <div style="width:fit-content;margin:auto;font-size:1.9rem;margin-top: 2px;" class="wrapper">
+                                            <span style="width:fit-content;" class="token-balance-claim">${remainingTime.days}d, ${remainingTime.hours}h</span>
+                                        </div>
+                                        <div class="wrapper-claim" style="margin:auto;">
+                                            <span class="address-claim" style="font-size: 10px;width: fit-content;">Time Remaining</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>`;
+                
+                insert1 += html;
+            }
+        }
+    }
+
+    insert1 += '</tbody></table>';
+
     let spinner = $.confirm({
-        escapeKey: false,
-        backgroundDismiss: false,
+        escapeKey: true,
+        backgroundDismiss: true,
         icon: '',
         title: "",
         // HTML GOES HERE
@@ -494,18 +555,86 @@ export async function showStakesModal() {
         typeAnimated: false,
         draggable: false,
         buttons: {
-            close: function () {
-            },
-            downloadCSV: {
+            export: {
+                isHidden: true,
+                text: 'EXPORT <i class="fa fa-solid fa-download"></i>',
                 btnClass: 'btn-red',
                 action: function () {
-                    // CSV FUNCTION
+                    const data = structuredClone(currentStakes);
+
+                    data.forEach((stake) => {
+                        stake.startTime = new Date(Number(stake.startTime * 1000n)).toLocaleString();
+                        stake.endTime = new Date(Number(stake.endTime * 1000n)).toLocaleString();
+
+                        delete stake.delegationFee;
+
+                        stake.amount = round(web32.utils.fromWei(stake.amount, "ether"));
+                    });
+
+                    console.log(data);
+                    // 1. Convert the data to a CSV string
+                    const headers = Object.keys(data[0]);
+                    const csvRows = [];
+                    csvRows.push(headers.join(',')); // Add header row
+                    
+                    for (const row of data) {
+                        const values = headers.map(header => JSON.stringify(row[header]));
+                        csvRows.push(values.join(','));
+                    }
+                    
+                    const csvContent = csvRows.join('\n');
+                    
+                    // 2. Create a Blob and a URL for the file
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // 3. Create a temporary anchor element and trigger the download
+                    const link = document.createElement('a');
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', 'All_Stakes.csv'); // Set the file name
+                    link.style.display = 'none';
+                    
+                    document.body.appendChild(link); // Append the link to the body (required for some browsers)
+                    link.click(); // Simulate a click to trigger download
+                    
+                    // 4. Clean up
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url); // Free up memory                   
                 },
+            },
+            close: {
+                isHidden: true,
             },
         },
         onContentReady: async function () {
+            this.showLoading(true);
+
+            this.setContent(insert1);
+            this.setTitle("All Stakes");
+
+            let stakedAmountElement;
+
+            let localSpinner = this;
+
+            for (let j = 0; j < i; j++) {
+                stakedAmountElement = document.getElementById("stakedAmount" + j);
+                
+                new Odometer({el: stakedAmountElement, value: 0, format: odometerFormat});
+
+                formatOdometer(stakedAmountElement);
+
+                stakedAmountElement.innerHTML = round(web32.utils.fromWei(currentStakes[j].amount, "ether"));
+            }
+
+            document.querySelector(".jconfirm-box-container").style.width = "fit-content";
             // APPEND HTML
             // TRANSLATIONS
+
+            stakedAmountElement.addEventListener('odometerdone', function() {
+                localSpinner.buttons.export.show();
+                localSpinner.buttons.close.show();
+                localSpinner.hideLoading(true);
+            });
         }
     });
 
@@ -674,13 +803,26 @@ export function formatOdometer(odometer) {
             };
 
             for (let i = 0; i < 2; i++) {
-                odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
-                odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
-                odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
                 if (i == 0) {
                     odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
+                    odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
+                    odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
+                    odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
                 } else {
-                    odometerChild.children[odometerChild.children.length - 1].innerHTML = "M";
+                    let j = 0;
+                    while (odometerChild.children[odometerChild.children.length - 1].querySelectorAll(".odometer-value")[0]?.innerHTML === '0') {
+                        j += 1;
+                        odometerChild.removeChild(odometerChild.children[odometerChild.children.length - 1]);
+                    }
+                    if (j === 3) {
+                        odometerChild.children[odometerChild.children.length - 1].innerHTML = "M";
+                    } else {
+                        amountOfThousands[0].classList.add("odometer-radix-mark");
+
+                        let htmlString = '<span class="odometer-digit">M</span>';
+
+                        odometerChild.insertAdjacentHTML('beforeend', htmlString); 
+                    }
                 }
             }
         }

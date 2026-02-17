@@ -319,3 +319,20 @@ export function isNumber(value) {
 export function showRewards(Rewards) {
     document.getElementById('ClaimButtonText').innerText = Rewards;
 }
+
+export function getTimeRemaining(startTime, endtime){
+    var time = new Date(new Date(endtime) - new Date(startTime));
+    var t = Math.floor(time.getTime());
+    var seconds = Math.floor( (t/1000) % 60 );
+    var minutes = Math.floor( (t/1000/60) % 60 );
+    var hours = Math.floor( (t/(1000*60*60)) % 24 );
+    var days = Math.floor( t/(1000*60*60*24) );
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  }
+  

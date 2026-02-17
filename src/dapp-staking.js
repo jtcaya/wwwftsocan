@@ -1,7 +1,7 @@
 import { GetContract, GetNetworkName, MMSDK, showAccountAddress, showBalance, showTokenBalance, FlareAbis, FlareLogos, updateCurrentBalancesStatus, updateCurrentAccountStatus } from "./flare-utils";
 import { ethers } from "./ethers.js";
 import { wait, unPrefix0x, round, isNumber, checkConnection, checkTxStake, showConnectedAccountAddress, resetDappObjectState } from "./dapp-utils.js";
-import { showSpinner, showConfirmationSpinnerTransfer, showConfirmationSpinnerStake, showConfirmStake, showFailStake, showBindPAddress, setCurrentAppState, setCurrentPopup, closeCurrentPopup, showValidatorInvalid, showSignatureSpinner, formatOdometer } from "./dapp-ui.js";
+import { showSpinner, showConfirmationSpinnerTransfer, showConfirmationSpinnerStake, showConfirmStake, showFailStake, showBindPAddress, setCurrentAppState, setCurrentPopup, closeCurrentPopup, showValidatorInvalid, showSignatureSpinner, formatOdometer, showStakesModal } from "./dapp-ui.js";
 import { walletConnectEVMParams } from "./dapp-globals.js";
 import { switchClaimButtonColor, switchClaimButtonColorBack, showClaimRewards } from "./dapp-claim.js";
 import { LedgerEVMSingleSign } from "./dapp-ledger.js";
@@ -436,73 +436,11 @@ export async function ConnectPChainClickStake(DappObject, HandleClick, PassedPub
 }
 
 async function showStakeInfo(unPrefixedAddr, web32) {
-    // let stakeInfo = await getStakeInfo(unPrefixedAddr);
-    let ftsoList = await getStakeInfo("flare1dkeqvpd68stg3rgclmayr900jtmxqx9yp2y29d");
+    let ftsoList = await getStakeInfo(unPrefixedAddr);
+    // let ftsoList = await getStakeInfo("flare1dkeqvpd68stg3rgclmayr900jtmxqx9yp2y29d");
     console.log(ftsoList);
 
-    if (ftsoList.length < 1) {
-        try {
-            var insert1 = '';
-
-            var delegatedFtsoElement = document.getElementById('wrap-box-stake');
-            
-            fetch(dappUrlBaseAddr + 'validatorlist.json')
-                .then(res => res.json())
-                .then(async FtsoInfo => {
-                    FtsoInfo.sort((a, b) => a.name > b.name ? 1 : -1);
-
-                    let indexNumber;
-
-                    for (var f = 0; f < FtsoInfo.length; f++) {
-                        if (FtsoInfo[f].nodeId.toLowerCase() === ftsoList[0].nodeId.toLowerCase()) {
-                            indexNumber = f;
-
-                            // Origin: https://raw.githubusercontent.com/TowoLabs/ftso-signal-providers/master/assets.
-                            insert1 += `<div class="wrap-box-ftso" data-addr="${ftsoList[0].nodeId}">
-                                            <div class="row">
-                                                <div class="wrap-box-content">
-                                                    <img src="${dappUrlBaseAddr}assets/${ftsoList[0].nodeId}.png" alt="${FtsoInfo[f].name}" class="delegated-icon" id="delegatedIcon"/>
-                                                    <div class="ftso-identifier">
-                                                        <span id="delegatedName">${FtsoInfo[f].name}</span>
-                                                    </div>
-                                                    <div class="wrapper">
-                                                        <span id="stakedAmount" class="token-balance-claim odometer">0</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="wrapper-claim">
-                                                    <span>${dappStrings['dapp_provider']}:</span>
-                                                    <span class="address-claim">${ftsoList[0].nodeId}</span>
-                                                </div>
-                                            </div>
-                                        </div>`;
-                            
-                                        break
-                        }
-                    }
-
-                    let delegatedFtsoElementChildren = delegatedFtsoElement.getElementsByClassName('wrap-box-ftso');
-
-                    while (delegatedFtsoElementChildren[0]) {
-                        delegatedFtsoElementChildren[0].parentNode.removeChild(delegatedFtsoElementChildren[0]);
-                    }
-
-                    delegatedFtsoElement.insertAdjacentHTML('afterbegin', insert1);
-
-                    let stakedAmountElement = document.getElementById("stakedAmount");
-
-                    new Odometer({el: stakedAmountElement, value: 0, format: odometerFormat});
-
-                    formatOdometer(stakedAmountElement);
-
-                    stakedAmountElement.innerHTML = round(web32.utils.fromWei(ftsoList[0].amount, "ether"));
-                });
-        } catch (error) {
-            console.log(error);
-        }
-    } else if (ftsoList.length === 1) {    
-    //} else if (ftsoList.length > 1) {
+    if (typeof ftsoList !== "undefined" && ftsoList.length > 0) {    
         // TODO: Add POPUP Modal and translations and fix if conditions;
         try {
             var insert1 = '';
@@ -512,12 +450,12 @@ async function showStakeInfo(unPrefixedAddr, web32) {
             insert1 += `<div class="wrap-box-ftso">
                             <div class="row">
                                 <div class="wrap-box-content">
-                                    <img src="${dappUrlBaseAddr}img/FTSO.png" alt="${dappStrings['dapp_provider']}" class="delegated-icon" id="delegatedIcon"/>
+                                    <i class="delegated-icon fa fa-solid fa-lock" style="font-size: 37px;padding-top: 2px;color: #383a3b;" id="delegatedIcon"></i>
                                     <div class="ftso-identifier">
-                                        <span id="delegatedName">${dappStrings['dapp_amount']}</span>
+                                        <span id="delegatedName">Locked Funds</span>
                                     </div>
-                                    <div class="wrapper">
-                                        <span id="stakedAmount" class="token-balance-claim odometer">0</span>
+                                    <div class="wrapper" style="width: fit-content; margin-right: 12%;max-width:100px;">
+                                        <span id="stakedAmount" style="width: fit-content;" class="token-balance-claim odometer">0</span>
                                     </div>
                                 </div>
                             </div>
@@ -576,8 +514,14 @@ async function showStakeInfo(unPrefixedAddr, web32) {
                 }, { once: true });
             });
 
+            let validatorList = await fetch(dappUrlBaseAddr + 'validatorlist.json');
+
+            validatorList = await validatorList.json();
+
+            validatorList.sort((a, b) => a.name > b.name ? 1 : -1);
+
             document.getElementById("viewStakes").addEventListener("click", async function () {
-                // showStakesModal()
+                await showStakesModal(validatorList, ftsoList, web32);
             });
         } catch (error) {
             console.log(error);

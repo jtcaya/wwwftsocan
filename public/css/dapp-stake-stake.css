@@ -223,6 +223,12 @@ input[type="number"]::-webkit-outer-spin-button {
     opacity: 0.7 !important;
 }
 
+.validator-table-row {
+    display: flex;
+    flex-direction: column;
+    padding: 0 4px 0 8px;
+}
+
 @media only screen and (min-width: 0px) and (max-width: 480px) {
     .selectize-input {
         font-size: 2rem !important;
@@ -264,5 +270,9 @@ input[type="number"]::-webkit-outer-spin-button {
 
     .stake-amount .stake-amount-nav .stake-amount-button.stake-amount-button-max {
         top: 6px;
+    }
+
+    .validator-table-row {
+        padding: 0 10px 0 8px;
     }
 }
