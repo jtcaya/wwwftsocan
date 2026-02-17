@@ -155,6 +155,8 @@ export async function resetDappObjectState(DappObject) {
 
     DappObject.signatureStaking = "";
 
+    localStorage.clear();
+
     DappObject.ledgerSelectedIndex = "";
 
     DappObject.selectedAddress = "";

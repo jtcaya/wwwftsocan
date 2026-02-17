@@ -212,7 +212,7 @@ export async function ConnectPChainClickStake(DappObject, HandleClick, PassedPub
                     account = DappObject.selectedAddress;
                 }
     
-                if (DappObject.signatureStaking === "") {
+                if (DappObject.signatureStaking === "" && localStorage.getItem('signatureStaking') === null) {
     
                     if (DappObject.isPopupActive == false) {
                         let signSpinner = await showSignatureSpinner();
@@ -230,6 +230,8 @@ export async function ConnectPChainClickStake(DappObject, HandleClick, PassedPub
                         });
         
                         DappObject.signatureStaking = signature;
+
+                        localStorage.setItem('signatureStaking', signature);
                         
                         DappObject.isPopupActive = false;
         

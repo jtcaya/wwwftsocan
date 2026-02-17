@@ -9,6 +9,7 @@ import { ethers } from "./ethers.js";
 
 export async function handleAccountsChanged(accounts, DappObject, pageIndex = 1, stakingOption, rpcUrl, flrAddr, autoRefresh) {
     DappObject.signatureStaking = "";
+    localStorage.clear();
     DappObject.selectedAddress = "";
 
     if (pageIndex === 1 || pageIndex === '1') {
@@ -425,7 +426,7 @@ export async function ConnectWalletClick(rpcUrl, flrAddr, DappObject, pageIndex,
                     account = DappObject.selectedAddress;
                 }
 
-                if (DappObject.signatureStaking === "") {
+                if (DappObject.signatureStaking === "" && localStorage.getItem('signatureStaking') === null) {
         
                     if (DappObject.isPopupActive == false) {
                         let signSpinner = await showSignatureSpinner();
@@ -444,6 +445,8 @@ export async function ConnectWalletClick(rpcUrl, flrAddr, DappObject, pageIndex,
 
                         DappObject.signatureStaking = signature;
 
+                        localStorage.setItem('signatureStaking', signature);
+
                         DappObject.isPopupActive = false;
 
                         signSpinner.close();
@@ -461,6 +464,8 @@ export async function ConnectWalletClick(rpcUrl, flrAddr, DappObject, pageIndex,
                 DappObject.isAccountConnected = true;
 
                 flrPublicKey = await GetPublicKey(account, message, DappObject.signatureStaking);
+
+                localStorage.setItem('signatureStaking', flrPublicKey);
             }
         } else {
             account = PassedEthAddr;
