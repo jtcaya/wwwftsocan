@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: FTSOCAN\n"
 "Report-Msgid-Bugs-To: info@ftsocan.com\n"
 "POT-Creation-Date: 2025-06-29 19:30-0400\n"
-"PO-Revision-Date: 2026-01-05 22:15-0500\n"
+"PO-Revision-Date: 2026-02-17 10:19-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -838,3 +838,47 @@ msgstr "Waiting for signature confirmation."
 #: strings.php:188
 msgid "dapp_metamask_signature"
 msgstr "Please sign this message in order to obtain the PUBLIC key associated with your account."
+
+#: strings.php:189
+msgid "dapp_locked_funds"
+msgstr "Locked Funds"
+
+#: strings.php:190
+msgid "dapp_view_all_stakes"
+msgstr "View all Stakes"
+
+#: strings.php:191
+msgid "dapp_all_stakes"
+msgstr "All Stakes"
+
+#: strings.php:192
+msgid "dapp_time_remaining"
+msgstr "Time Remaining"
+
+#: strings.php:193
+msgid "dapp_day_delimiter"
+msgstr "d"
+
+#: strings.php:194
+msgid "dapp_hour_delimiter"
+msgstr "h"
+
+#: strings.php:195
+msgid "dapp_export"
+msgstr "EXPORT"
+
+#: strings.php:196
+msgid "dapp_startTime"
+msgstr "startTime"
+
+#: strings.php:197
+msgid "dapp_endTime"
+msgstr "endTime"
+
+#: strings.php:198
+msgid "dapp_amount"
+msgstr "amount"
+
+#: strings.php:199
+msgid "dapp_paddress"
+msgstr "pAddress"

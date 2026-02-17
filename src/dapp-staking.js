@@ -437,11 +437,9 @@ export async function ConnectPChainClickStake(DappObject, HandleClick, PassedPub
 
 async function showStakeInfo(unPrefixedAddr, web32) {
     let ftsoList = await getStakeInfo(unPrefixedAddr);
-    // let ftsoList = await getStakeInfo("flare1dkeqvpd68stg3rgclmayr900jtmxqx9yp2y29d");
-    console.log(ftsoList);
+    //let ftsoList = await getStakeInfo("flare1dkeqvpd68stg3rgclmayr900jtmxqx9yp2y29d");
 
     if (typeof ftsoList !== "undefined" && ftsoList.length > 0) {    
-        // TODO: Add POPUP Modal and translations and fix if conditions;
         try {
             var insert1 = '';
 
@@ -452,7 +450,7 @@ async function showStakeInfo(unPrefixedAddr, web32) {
                                 <div class="wrap-box-content">
                                     <i class="delegated-icon fa fa-solid fa-lock" style="font-size: 37px;padding-top: 2px;color: #383a3b;" id="delegatedIcon"></i>
                                     <div class="ftso-identifier">
-                                        <span id="delegatedName">Locked Funds</span>
+                                        <span id="delegatedName">${dappStrings['dapp_locked_funds']}</span>
                                     </div>
                                     <div class="wrapper" style="width: fit-content; margin-right: 12%;max-width:100px;">
                                         <span id="stakedAmount" style="width: fit-content;" class="token-balance-claim odometer">0</span>
@@ -462,7 +460,7 @@ async function showStakeInfo(unPrefixedAddr, web32) {
                             <div class="row">
                                 <div class="wrapper-claim">
                                     <div id="viewStakes" style="font-weight: bold; cursor: pointer;">
-                                        <span>View all Stakes</span>
+                                        <span>${dappStrings['dapp_view_all_stakes']}</span>
                                         <lord-icon
                                             id="StakeArrow"
                                             src="${dappUrlBaseAddr}img/icons/arrow.json"

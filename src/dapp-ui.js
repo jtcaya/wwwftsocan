@@ -527,10 +527,10 @@ export async function showStakesModal(validatorList, currentStakes, web32) {
                                 <td>
                                     <div style="display:flex;flex-direction: column;height:100%;padding: 0 8px">
                                         <div style="width:fit-content;margin:auto;font-size:1.9rem;margin-top: 2px;" class="wrapper">
-                                            <span style="width:fit-content;" class="token-balance-claim">${remainingTime.days}d, ${remainingTime.hours}h</span>
+                                            <span style="width:fit-content;" class="token-balance-claim">${remainingTime.days}${dappStrings['dapp_day_delimiter']}, ${remainingTime.hours}${dappStrings['dapp_hour_delimiter']}</span>
                                         </div>
                                         <div class="wrapper-claim" style="margin:auto;">
-                                            <span class="address-claim" style="font-size: 10px;width: fit-content;">Time Remaining</span>
+                                            <span class="address-claim" style="font-size: 10px;width: fit-content;">${dappStrings['dapp_time_remaining']}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -557,7 +557,7 @@ export async function showStakesModal(validatorList, currentStakes, web32) {
         buttons: {
             export: {
                 isHidden: true,
-                text: 'EXPORT <i class="fa fa-solid fa-download"></i>',
+                text: dappStrings['dapp_export'] + ' <i class="fa fa-solid fa-download"></i>',
                 btnClass: 'btn-red',
                 action: function () {
                     const data = structuredClone(currentStakes);
@@ -566,12 +566,24 @@ export async function showStakesModal(validatorList, currentStakes, web32) {
                         stake.startTime = new Date(Number(stake.startTime * 1000n)).toLocaleString();
                         stake.endTime = new Date(Number(stake.endTime * 1000n)).toLocaleString();
 
-                        delete stake.delegationFee;
-
                         stake.amount = round(web32.utils.fromWei(stake.amount, "ether"));
-                    });
 
-                    console.log(data);
+                        let startTime = stake.startTime;
+                        let endTime = stake.endTime;
+                        let amount = stake.amount;
+                        let pAddress = stake.pAddress;
+
+                        delete stake.delegationFee;
+                        delete stake.startTime;
+                        delete stake.endTime;
+                        delete stake.amount;
+                        delete stake.pAddress;
+
+                        stake[dappStrings['dapp_startTime']] = startTime;
+                        stake[dappStrings['dapp_endTime']] = endTime;
+                        stake[dappStrings['dapp_amount']] = amount;
+                        stake[dappStrings['dapp_paddress']] = pAddress;
+                    });
                     // 1. Convert the data to a CSV string
                     const headers = Object.keys(data[0]);
                     const csvRows = [];
@@ -591,7 +603,7 @@ export async function showStakesModal(validatorList, currentStakes, web32) {
                     // 3. Create a temporary anchor element and trigger the download
                     const link = document.createElement('a');
                     link.setAttribute('href', url);
-                    link.setAttribute('download', 'All_Stakes.csv'); // Set the file name
+                    link.setAttribute('download', dappStrings['dapp_all_stakes'] + '.csv'); // Set the file name
                     link.style.display = 'none';
                     
                     document.body.appendChild(link); // Append the link to the body (required for some browsers)
@@ -610,7 +622,7 @@ export async function showStakesModal(validatorList, currentStakes, web32) {
             this.showLoading(true);
 
             this.setContent(insert1);
-            this.setTitle("All Stakes");
+            this.setTitle(dappStrings['dapp_all_stakes']);
 
             let stakedAmountElement;
 
@@ -627,9 +639,7 @@ export async function showStakesModal(validatorList, currentStakes, web32) {
             }
 
             document.querySelector(".jconfirm-box-container").style.width = "fit-content";
-            // APPEND HTML
-            // TRANSLATIONS
-
+            
             stakedAmountElement.addEventListener('odometerdone', function() {
                 localSpinner.buttons.export.show();
                 localSpinner.buttons.close.show();
