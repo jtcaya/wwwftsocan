@@ -11,6 +11,7 @@ export const FlareAbis = {
     AddressBinder: addressBinderAbi,
     ValidatorRewardManager: validatorRewardAbi,
     FlareSystemsManager: systemsManagerAbi,
+    PChainStakeMirror: pchainMirrorAbi,
 };
 
 export var selectedNetwork = document.getElementById("SelectedNetwork");

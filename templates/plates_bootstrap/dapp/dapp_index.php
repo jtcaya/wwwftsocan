@@ -262,6 +262,7 @@
 <script type="text/javascript" src="<?=$view['urlbaseaddr'] ?>js/claim-setup-abi.js"></script>
 <script type="text/javascript" src="<?=$view['urlbaseaddr'] ?>js/address-binder-abi.js"></script>
 <script type="text/javascript" src="<?=$view['urlbaseaddr'] ?>js/validator-reward-abi.js"></script>
+<script type="text/javascript" src="<?=$view['urlbaseaddr'] ?>js/pchain-mirror-abi.js"></script>
 
 <script>
     $('#centerButton').click(function(){

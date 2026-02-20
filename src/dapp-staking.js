@@ -393,7 +393,7 @@ export async function ConnectPChainClickStake(DappObject, HandleClick, PassedPub
 
                     showAccountAddress(prefixedPchainAddress, account);
 
-                    await showStakeInfo(DappObject.unPrefixedAddr, web32);
+                    await showStakeInfo(account, DappObject.unPrefixedAddr, web32, rpcUrl, flrAddr);
 
                     await setCurrentPopup(dappStrings['dapp_mabel_claimstake1'], true);
 
@@ -437,95 +437,108 @@ export async function ConnectPChainClickStake(DappObject, HandleClick, PassedPub
     }
 }
 
-async function showStakeInfo(unPrefixedAddr, web32) {
-    let ftsoList = await getStakeInfo(unPrefixedAddr);
-    //let ftsoList = await getStakeInfo("flare1dkeqvpd68stg3rgclmayr900jtmxqx9yp2y29d");
+async function showStakeInfo(account, unPrefixedAddr, web32, rpcUrl, flrAddr) {
+    try {
+        const pchainMirrorAddr = await GetContract("PChainStakeMirror", rpcUrl, flrAddr);
 
-    if (typeof ftsoList !== "undefined" && ftsoList.length > 0) {    
-        try {
-            var insert1 = '';
+        const pchainMirrorContract = new web32.eth.Contract(FlareAbis.PChainStakeMirror, pchainMirrorAddr);
 
-            var delegatedFtsoElement = document.getElementById('wrap-box-stake');
+        //let ftsoList = await pchainMirrorContract.methods.stakesOf(account).call();
+        let ftsoList = await pchainMirrorContract.methods.stakesOf("0xDC17aDE3DDF495a2D8332BA21dE799861eF5469c").call();
+        unPrefixedAddr = "flare107gdqwg3u9apqlnwhda0s9h34ua07hxf5jymgl";
 
-            insert1 += `<div class="wrap-box-ftso">
-                            <div class="row">
-                                <div class="wrap-box-content">
-                                    <i class="delegated-icon fa fa-solid fa-lock" style="font-size: 37px;padding-top: 2px;color: #383a3b;" id="delegatedIcon"></i>
-                                    <div class="ftso-identifier">
-                                        <span id="delegatedName">${dappStrings['dapp_locked_funds']}</span>
-                                    </div>
-                                    <div class="wrapper" style="width: fit-content; margin-right: 12%;max-width:100px;">
-                                        <span id="stakedAmount" style="width: fit-content;" class="token-balance-claim odometer">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="wrapper-claim">
-                                    <div id="viewStakes" style="font-weight: bold; cursor: pointer;">
-                                        <span>${dappStrings['dapp_view_all_stakes']}</span>
-                                        <lord-icon
-                                            id="StakeArrow"
-                                            src="${dappUrlBaseAddr}img/icons/arrow.json"
-                                            colors="primary:#8f8f8f"
-                                            target="#viewStakes"
-                                            style="width:19px;height:19px;top:5px;left:2px;display:none;">
-                                        </lord-icon>
+        console.log(ftsoList);
+
+        ftsoList.length = ftsoList.__length__;
+
+        if (typeof ftsoList !== "undefined" && ftsoList.length > 0) {    
+            try {
+                var insert1 = '';
+
+                var delegatedFtsoElement = document.getElementById('wrap-box-stake');
+
+                insert1 += `<div class="wrap-box-ftso">
+                                <div class="row">
+                                    <div class="wrap-box-content">
+                                        <i class="delegated-icon fa fa-solid fa-lock" style="font-size: 37px;padding-top: 2px;color: #383a3b;" id="delegatedIcon"></i>
+                                        <div class="ftso-identifier">
+                                            <span id="delegatedName">${dappStrings['dapp_locked_funds']}</span>
+                                        </div>
+                                        <div class="wrapper" style="width: fit-content; margin-right: 12%;max-width:100px;">
+                                            <span id="stakedAmount" style="width: fit-content;" class="token-balance-claim odometer">0</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>`;
+                                <div class="row">
+                                    <div class="wrapper-claim">
+                                        <div id="viewStakes" style="font-weight: bold; cursor: pointer;">
+                                            <span>${dappStrings['dapp_view_all_stakes']}</span>
+                                            <lord-icon
+                                                id="StakeArrow"
+                                                src="${dappUrlBaseAddr}img/icons/arrow.json"
+                                                colors="primary:#8f8f8f"
+                                                target="#viewStakes"
+                                                style="width:19px;height:19px;top:5px;left:2px;display:none;">
+                                            </lord-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
 
-            let delegatedFtsoElementChildren = delegatedFtsoElement.getElementsByClassName('wrap-box-ftso');
+                let delegatedFtsoElementChildren = delegatedFtsoElement.getElementsByClassName('wrap-box-ftso');
 
-            while (delegatedFtsoElementChildren[0]) {
-                delegatedFtsoElementChildren[0].parentNode.removeChild(delegatedFtsoElementChildren[0]);
+                while (delegatedFtsoElementChildren[0]) {
+                    delegatedFtsoElementChildren[0].parentNode.removeChild(delegatedFtsoElementChildren[0]);
+                }
+
+                delegatedFtsoElement.insertAdjacentHTML('afterbegin', insert1);
+
+                let stakedAmountElement = document.getElementById("stakedAmount");
+
+                new Odometer({el: stakedAmountElement, value: 0, format: odometerFormat});
+
+                formatOdometer(stakedAmountElement);
+
+                let TotalStake = BigInt(0);
+
+                for (let i = 0; i < ftsoList[1].length; i++) {
+                    TotalStake += ftsoList[1][i];
+                }
+
+                stakedAmountElement.innerHTML = round(web32.utils.fromWei(TotalStake, "ether"));
+
+                const iconElement = document.getElementById('StakeArrow');
+
+                iconElement.style.display = 'inline-block';
+                iconElement.setAttribute('state', 'in-reveal');
+                iconElement.setAttribute('trigger', 'in');
+
+                iconElement.addEventListener('ready', () => {
+                    iconElement.playerInstance.addEventListener('complete', (e) => {
+                        // change to assigned state
+                        iconElement.setAttribute('state', 'hover-slide');
+                        iconElement.setAttribute('target', '#viewStakes');
+                    
+                        // play from beginning
+                        iconElement.setAttribute('trigger', 'hover');
+                    }, { once: true });
+                });
+
+                let validatorList = await fetch(dappUrlBaseAddr + 'validatorlist.json');
+
+                validatorList = await validatorList.json();
+
+                validatorList.sort((a, b) => a.name > b.name ? 1 : -1);
+
+                document.getElementById("viewStakes").addEventListener("click", async function () {
+                    await showStakesModal(validatorList, ftsoList, web32, unPrefixedAddr);
+                });
+            } catch (error) {
+                console.log(error);
             }
-
-            delegatedFtsoElement.insertAdjacentHTML('afterbegin', insert1);
-
-            let stakedAmountElement = document.getElementById("stakedAmount");
-
-            new Odometer({el: stakedAmountElement, value: 0, format: odometerFormat});
-
-            formatOdometer(stakedAmountElement);
-
-            let TotalStake = BigInt(0);
-
-            for (let i = 0; i < ftsoList.length; i++) {
-                TotalStake += ftsoList[i].amount;
-            }
-
-            stakedAmountElement.innerHTML = round(web32.utils.fromWei(TotalStake, "ether"));
-
-            const iconElement = document.getElementById('StakeArrow');
-
-            iconElement.style.display = 'inline-block';
-            iconElement.setAttribute('state', 'in-reveal');
-            iconElement.setAttribute('trigger', 'in');
-
-            iconElement.addEventListener('ready', () => {
-                iconElement.playerInstance.addEventListener('complete', (e) => {
-                    // change to assigned state
-                    iconElement.setAttribute('state', 'hover-slide');
-                    iconElement.setAttribute('target', '#viewStakes');
-                
-                    // play from beginning
-                    iconElement.setAttribute('trigger', 'hover');
-                }, { once: true });
-            });
-
-            let validatorList = await fetch(dappUrlBaseAddr + 'validatorlist.json');
-
-            validatorList = await validatorList.json();
-
-            validatorList.sort((a, b) => a.name > b.name ? 1 : -1);
-
-            document.getElementById("viewStakes").addEventListener("click", async function () {
-                await showStakesModal(validatorList, ftsoList, web32);
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        }  
+    } catch (error) {
+        console.log(error);
     }
 }
 
