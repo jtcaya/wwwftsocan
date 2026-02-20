@@ -443,11 +443,9 @@ async function showStakeInfo(account, unPrefixedAddr, web32, rpcUrl, flrAddr) {
 
         const pchainMirrorContract = new web32.eth.Contract(FlareAbis.PChainStakeMirror, pchainMirrorAddr);
 
-        //let ftsoList = await pchainMirrorContract.methods.stakesOf(account).call();
-        let ftsoList = await pchainMirrorContract.methods.stakesOf("0xDC17aDE3DDF495a2D8332BA21dE799861eF5469c").call();
-        unPrefixedAddr = "flare107gdqwg3u9apqlnwhda0s9h34ua07hxf5jymgl";
-
-        console.log(ftsoList);
+        let ftsoList = await pchainMirrorContract.methods.stakesOf(account).call();
+        // let ftsoList = await pchainMirrorContract.methods.stakesOf("0x5F4E1FB306d4c071b962afcAeD7beE2287E84679").call();
+        // unPrefixedAddr = "flare1dkeqvpd68stg3rgclmayr900jtmxqx9yp2y29d";
 
         ftsoList.length = ftsoList.__length__;
 
@@ -473,6 +471,7 @@ async function showStakeInfo(account, unPrefixedAddr, web32, rpcUrl, flrAddr) {
                                     <div class="wrapper-claim">
                                         <div id="viewStakes" style="font-weight: bold; cursor: pointer;">
                                             <span>${dappStrings['dapp_view_all_stakes']}</span>
+                                            <i id="allStakesSpinner" class="fa fa-solid fa-spinner fa-spin"></i>
                                             <lord-icon
                                                 id="StakeArrow"
                                                 src="${dappUrlBaseAddr}img/icons/arrow.json"
@@ -493,6 +492,19 @@ async function showStakeInfo(account, unPrefixedAddr, web32, rpcUrl, flrAddr) {
 
                 delegatedFtsoElement.insertAdjacentHTML('afterbegin', insert1);
 
+                const iconElement = document.getElementById('StakeArrow');
+
+                iconElement.addEventListener('ready', () => {
+                    iconElement.playerInstance.addEventListener('complete', (e) => {
+                        // change to assigned state
+                        iconElement.setAttribute('state', 'hover-slide');
+                        iconElement.setAttribute('target', '#viewStakes');
+                    
+                        // play from beginning
+                        iconElement.setAttribute('trigger', 'hover');
+                    }, { once: true });
+                });
+
                 let stakedAmountElement = document.getElementById("stakedAmount");
 
                 new Odometer({el: stakedAmountElement, value: 0, format: odometerFormat});
@@ -507,38 +519,45 @@ async function showStakeInfo(account, unPrefixedAddr, web32, rpcUrl, flrAddr) {
 
                 stakedAmountElement.innerHTML = round(web32.utils.fromWei(TotalStake, "ether"));
 
-                const iconElement = document.getElementById('StakeArrow');
-
-                iconElement.style.display = 'inline-block';
-                iconElement.setAttribute('state', 'in-reveal');
-                iconElement.setAttribute('trigger', 'in');
-
-                iconElement.addEventListener('ready', () => {
-                    iconElement.playerInstance.addEventListener('complete', (e) => {
-                        // change to assigned state
-                        iconElement.setAttribute('state', 'hover-slide');
-                        iconElement.setAttribute('target', '#viewStakes');
-                    
-                        // play from beginning
-                        iconElement.setAttribute('trigger', 'hover');
-                    }, { once: true });
-                });
-
                 let validatorList = await fetch(dappUrlBaseAddr + 'validatorlist.json');
 
                 validatorList = await validatorList.json();
 
                 validatorList.sort((a, b) => a.name > b.name ? 1 : -1);
 
-                document.getElementById("viewStakes").addEventListener("click", async function () {
-                    await showStakesModal(validatorList, ftsoList, web32, unPrefixedAddr);
+                let stakes = [];
+
+                for (let i = 0; i < ftsoList[0].length; i++) {
+                    for (let j = 0; j < validatorList.length; j++) {
+                        if (hexToBase58(ftsoList[0][i].toLowerCase()).slice(0, -6) === validatorList[j].nodeId.slice(7, -6)) {
+                            let allStakes = await getCurrentStakes(true, validatorList[j].nodeId);
+            
+                            allStakes = allStakes.filter(s => s.pAddress === unPrefixedAddr);
+
+                            allStakes.forEach(function (stake) {
+                                stakes.push(stake);
+                            });
+                        }
+                    }
+                }
+
+                let viewStakesEl = document.getElementById("viewStakes");
+
+                viewStakesEl.removeChild(viewStakesEl.children[1]);
+
+                iconElement.style.display = 'inline-block';
+                iconElement.setAttribute('state', 'in-reveal');
+                iconElement.setAttribute('trigger', 'in');
+
+                viewStakesEl.addEventListener("click", async function () {
+                    await showStakesModal(validatorList, stakes, web32);
                 });
             } catch (error) {
-                console.log(error);
+                throw error;
             }
         }  
     } catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 }
 

@@ -480,7 +480,7 @@ export async function showAlreadyDelegated(DelegatedFtsos, object) {
     });
 }
 
-export async function showStakesModal(validatorList, currentStakes, web32, pAddress) {
+export async function showStakesModal(validatorList, currentStakes, web32) {
     DappObject.isPopupActive = true;
 
     let insert1 = `<table>
@@ -495,20 +495,10 @@ export async function showStakesModal(validatorList, currentStakes, web32, pAddr
 
     let i = 0;
 
-    for (i = 0; i < currentStakes[0].length; i++) {
+    for (i = 0; i < currentStakes.length; i++) {
         for (let j = 0; j < validatorList.length; j++) {
-            if (hexToBase58(currentStakes[0][i].toLowerCase()).slice(0, -6) === validatorList[j].nodeId.slice(7, -6)) {
-                //let remainingTime = getTimeRemaining(Number(currentStakes[i].startTime * 1000n), Number(currentStakes[i].endTime * 1000n));
-                console.log(validatorList[j]);
-                let stakes = await getCurrentStakes(true, validatorList[j].nodeId);
-
-                stakes = stakes.filter(s => s.pAddress === pAddress);
-
-                console.log(stakes);
-                let remainingTime = {
-                    days: "",
-                    hours: "",
-                };
+            if (currentStakes[i].nodeId === validatorList[j].nodeId) {
+                let remainingTime = getTimeRemaining(Number(currentStakes[i].startTime * 1000n), Number(currentStakes[i].endTime * 1000n));
 
                 let html = `<tr style="border-top:1px solid #8f8f8f;border-bottom:1px solid #8f8f8f;padding: 5px 0;line-height:normal;">
                                 <td style="padding: 5px 0;">
@@ -570,59 +560,59 @@ export async function showStakesModal(validatorList, currentStakes, web32, pAddr
                 text: dappStrings['dapp_export'] + ' <i class="fa fa-solid fa-download"></i>',
                 btnClass: 'btn-red',
                 action: function () {
-                    // TODO: Fix CSV DOWNLOAD
-                    // const data = structuredClone(currentStakes);
+                    const data = structuredClone(currentStakes);
 
-                    // data.forEach((stake) => {
-                    //     stake.startTime = new Date(Number(stake.startTime * 1000n)).toLocaleString();
-                    //     stake.endTime = new Date(Number(stake.endTime * 1000n)).toLocaleString();
+                    data.forEach((stake) => {
+                        stake.startTime = new Date(Number(stake.startTime * 1000n)).toLocaleString();
+                        stake.endTime = new Date(Number(stake.endTime * 1000n)).toLocaleString();
 
-                    //     stake.amount = round(web32.utils.fromWei(stake.amount, "ether"));
+                        stake.amount = round(web32.utils.fromWei(stake.amount, "ether"));
 
-                    //     let startTime = stake.startTime;
-                    //     let endTime = stake.endTime;
-                    //     let amount = stake.amount;
-                    //     let pAddress = stake.pAddress;
+                        let startTime = stake.startTime;
+                        let endTime = stake.endTime;
+                        let amount = stake.amount;
+                        let pAddress = stake.pAddress;
 
-                    //     delete stake.delegationFee;
-                    //     delete stake.startTime;
-                    //     delete stake.endTime;
-                    //     delete stake.amount;
-                    //     delete stake.pAddress;
+                        delete stake.delegationFee;
+                        delete stake.type;
+                        delete stake.startTime;
+                        delete stake.endTime;
+                        delete stake.amount;
+                        delete stake.pAddress;
 
-                    //     stake[dappStrings['dapp_startTime']] = startTime;
-                    //     stake[dappStrings['dapp_endTime']] = endTime;
-                    //     stake[dappStrings['dapp_amount']] = amount;
-                    //     stake[dappStrings['dapp_paddress']] = pAddress;
-                    // });
-                    // // 1. Convert the data to a CSV string
-                    // const headers = Object.keys(data[0]);
-                    // const csvRows = [];
-                    // csvRows.push(headers.join(',')); // Add header row
+                        stake[dappStrings['dapp_startTime']] = startTime;
+                        stake[dappStrings['dapp_endTime']] = endTime;
+                        stake[dappStrings['dapp_amount']] = amount;
+                        stake[dappStrings['dapp_paddress']] = pAddress;
+                    });
+                    // 1. Convert the data to a CSV string
+                    const headers = Object.keys(data[0]);
+                    const csvRows = [];
+                    csvRows.push(headers.join(',')); // Add header row
                     
-                    // for (const row of data) {
-                    //     const values = headers.map(header => JSON.stringify(row[header]));
-                    //     csvRows.push(values.join(','));
-                    // }
+                    for (const row of data) {
+                        const values = headers.map(header => JSON.stringify(row[header]));
+                        csvRows.push(values.join(','));
+                    }
                     
-                    // const csvContent = csvRows.join('\n');
+                    const csvContent = csvRows.join('\n');
                     
-                    // // 2. Create a Blob and a URL for the file
-                    // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                    // const url = URL.createObjectURL(blob);
+                    // 2. Create a Blob and a URL for the file
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
                     
-                    // // 3. Create a temporary anchor element and trigger the download
-                    // const link = document.createElement('a');
-                    // link.setAttribute('href', url);
-                    // link.setAttribute('download', dappStrings['dapp_all_stakes'] + '.csv'); // Set the file name
-                    // link.style.display = 'none';
+                    // 3. Create a temporary anchor element and trigger the download
+                    const link = document.createElement('a');
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', dappStrings['dapp_all_stakes'] + '.csv'); // Set the file name
+                    link.style.display = 'none';
                     
-                    // document.body.appendChild(link); // Append the link to the body (required for some browsers)
-                    // link.click(); // Simulate a click to trigger download
+                    document.body.appendChild(link); // Append the link to the body (required for some browsers)
+                    link.click(); // Simulate a click to trigger download
                     
-                    // // 4. Clean up
-                    // document.body.removeChild(link);
-                    // URL.revokeObjectURL(url); // Free up memory                   
+                    // 4. Clean up
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url); // Free up memory                   
                 },
             },
             close: {
@@ -646,7 +636,7 @@ export async function showStakesModal(validatorList, currentStakes, web32, pAddr
 
                 formatOdometer(stakedAmountElement);
 
-                stakedAmountElement.innerHTML = round(web32.utils.fromWei(currentStakes[1][j], "ether"));
+                stakedAmountElement.innerHTML = round(web32.utils.fromWei(currentStakes[j].amount, "ether"));
             }
 
             document.querySelector(".jconfirm-box-container").style.width = "fit-content";
