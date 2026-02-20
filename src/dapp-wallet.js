@@ -426,46 +426,58 @@ export async function ConnectWalletClick(rpcUrl, flrAddr, DappObject, pageIndex,
                     account = DappObject.selectedAddress;
                 }
 
-                if (DappObject.signatureStaking === "" && localStorage.getItem('signatureStaking') === null) {
+                let urlPrefix = "flare";
+
+                if (DappObject.selectedNetworkIndex == 1) {
+                    urlPrefix = "flare";
+                } else if (DappObject.selectedNetworkIndex == 2) {
+                    urlPrefix = "songbird";
+                }
+
+                let explorerUrl = "https://" + urlPrefix + "-explorer.flare.network/";
+
+                flrPublicKey = await recoverPublicKeyFromTx(account, explorerUrl, DappObject.chosenEVMProvider);
+
+                if (!flrPublicKey) {
+                    if (DappObject.signatureStaking === "" && localStorage.getItem('signatureStaking') === null) {
         
-                    if (DappObject.isPopupActive == false) {
-                        let signSpinner = await showSignatureSpinner();
-
-                        const signature = await DappObject.chosenEVMProvider.request({
-                            "method": "personal_sign",
-                            "params": [
-                                message,
-                                account
-                            ]
-                        }).catch((error) => async function() {
+                        if (DappObject.isPopupActive == false) {
+                            let signSpinner = await showSignatureSpinner();
+    
+                            const signature = await DappObject.chosenEVMProvider.request({
+                                "method": "personal_sign",
+                                "params": [
+                                    message,
+                                    account
+                                ]
+                            }).catch((error) => async function() {
+                                signSpinner.close();
+    
+                                throw error;
+                            });
+    
+                            DappObject.signatureStaking = signature;
+    
+                            localStorage.setItem('signatureStaking', signature);
+    
+                            DappObject.isPopupActive = false;
+    
                             signSpinner.close();
-
-                            throw error;
-                        });
-
-                        DappObject.signatureStaking = signature;
-
-                        localStorage.setItem('signatureStaking', signature);
-
-                        DappObject.isPopupActive = false;
-
-                        signSpinner.close();
-                    } else {
-                        return;
+                        } else {
+                            return;
+                        }
                     }
+    
+                    flrPublicKey = await GetPublicKey(account, message, DappObject.signatureStaking);
                 }
 
                 await setCurrentAppState("Connected");
-
+    
                 closeCurrentPopup();
 
                 // await setCurrentPopup("Connected to account: " + account.slice(0, 17));
 
                 DappObject.isAccountConnected = true;
-
-                flrPublicKey = await GetPublicKey(account, message, DappObject.signatureStaking);
-
-                localStorage.setItem('signatureStaking', flrPublicKey);
             }
         } else {
             account = PassedEthAddr;
@@ -735,7 +747,7 @@ export async function ConnectWalletClick(rpcUrl, flrAddr, DappObject, pageIndex,
             DappObject.isHandlingOperation = false;
         }
     } catch (error) {
-        // console.log(error);
+        console.log(error);
 
         document.getElementById("ConnectWalletText").innerText = dappStrings["dapp_connect"];
 

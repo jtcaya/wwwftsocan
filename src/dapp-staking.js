@@ -211,45 +211,59 @@ export async function ConnectPChainClickStake(DappObject, HandleClick, PassedPub
                 } else {
                     account = DappObject.selectedAddress;
                 }
-    
-                if (DappObject.signatureStaking === "" && localStorage.getItem('signatureStaking') === null) {
-    
-                    if (DappObject.isPopupActive == false) {
-                        let signSpinner = await showSignatureSpinner();
-        
-                        const signature = await DappObject.chosenEVMProvider.request({
-                            "method": "personal_sign",
-                            "params": [
-                                message,
-                                account
-                            ]
-                        }).catch((error) => async function() {
-                            signSpinner.close();
-        
-                            throw error;
-                        });
-        
-                        DappObject.signatureStaking = signature;
 
-                        localStorage.setItem('signatureStaking', signature);
-                        
-                        DappObject.isPopupActive = false;
-        
-                        signSpinner.close();
-                    } else {
-                        return;
-                    }
+                let urlPrefix = "flare";
+
+                if (DappObject.selectedNetworkIndex == 1) {
+                    urlPrefix = "flare";
+                } else if (DappObject.selectedNetworkIndex == 2) {
+                    urlPrefix = "songbird";
                 }
+
+                let explorerUrl = "https://" + urlPrefix + "-explorer.flare.network/";
+
+                flrPublicKey = await recoverPublicKeyFromTx(account, explorerUrl, DappObject.chosenEVMProvider);
     
+                if (!flrPublicKey) {
+                    if (DappObject.signatureStaking === "" && localStorage.getItem('signatureStaking') === null) {
+    
+                        if (DappObject.isPopupActive == false) {
+                            let signSpinner = await showSignatureSpinner();
+            
+                            const signature = await DappObject.chosenEVMProvider.request({
+                                "method": "personal_sign",
+                                "params": [
+                                    message,
+                                    account
+                                ]
+                            }).catch((error) => async function() {
+                                signSpinner.close();
+            
+                                throw error;
+                            });
+            
+                            DappObject.signatureStaking = signature;
+    
+                            localStorage.setItem('signatureStaking', signature);
+                            
+                            DappObject.isPopupActive = false;
+            
+                            signSpinner.close();
+                        } else {
+                            return;
+                        }
+                    }
+        
+                    flrPublicKey = await GetPublicKey(account, message, DappObject.signatureStaking);
+                }
+
                 await setCurrentAppState("Connected");
-    
+        
                 closeCurrentPopup();
     
                 // await setCurrentPopup("Connected to account: " + account.slice(0, 17));
     
                 DappObject.isAccountConnected = true;
-    
-                flrPublicKey = await GetPublicKey(account, message, DappObject.signatureStaking);
             }
         } else {
             account = PassedEthAddr;
